@@ -1,6 +1,6 @@
 <?php
 
-require_once 'Database.php'; // Make sure this points to your actual file
+require_once 'Database.php';
 
 class User extends Database
 {
