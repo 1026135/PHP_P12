@@ -1,10 +1,8 @@
 <?php
-
 require_once 'Database.php';
 
 class User extends Database
 {
-
     public function create($name, $email)
     {
         $sql = "INSERT INTO users (name, email) VALUES (:name, :email)";
@@ -48,4 +46,3 @@ class User extends Database
         return $stmt->execute([':id' => $id]);
     }
 }
-?>
