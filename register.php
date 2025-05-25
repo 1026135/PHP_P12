@@ -1,19 +1,22 @@
 <?php
-require 'config/config.php';
-require 'classes/User.php';
+require_once 'config/config.php';
+require_once 'classes/User.php';
+require_once 'helpers/functions.php';
 
 $user = new User();
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $name = $_POST['name'] ?? '';
-    $email = $_POST['email'] ?? '';
+    $name = trim($_POST['name'] ?? '');
+    $email = trim($_POST['email'] ?? '');
     $password = $_POST['password'] ?? '';
+
 
     if ($user->emailExists($email)) {
         $error = "E-mailadres bestaat al.";
     } else {
         $user->addUser($name, $email, $password);
-        header('Location: login.php');
+        //header('Location: login.php');
+        redirect('login.php');
         exit;
     }
 }

@@ -19,6 +19,7 @@ class Auth extends Database
         $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
         if ($user && password_verify($password, $user['password'])) {
+            // session_regenerate_id(true);
             $_SESSION['user'] = [
                 'id' => $user['id'],
                 'name' => $user['name'],

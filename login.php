@@ -1,15 +1,18 @@
 <?php
-require 'config/config.php';
-require 'classes/Auth.php';
+require_once 'config/config.php';
+require_once 'classes/Auth.php';
+require_once 'helpers/functions.php';
 
 $auth = new Auth();
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $email = $_POST['email'] ?? '';
-    $password = $_POST['password'] ?? '';
+    $email = trim($_POST['email'] ?? '');
+    $password = trim($_POST['password'] ?? '');
+
 
     if ($auth->login($email, $password)) {
-        header('Location: dashboard.php');
+        //header('Location: dashboard.php');
+        redirect('dashboard.php');
         exit;
     } else {
         $error = "Ongeldige inloggegevens.";
