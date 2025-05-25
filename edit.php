@@ -1,5 +1,4 @@
 <?php
-require_once 'config/config.php';
 require_once 'classes/Auth.php';
 require_once 'classes/User.php';
 require_once 'helpers/functions.php';
@@ -27,7 +26,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // You might want to add validation here
 
     $user->updateUser($id, $name, $email);
-    header('Location: dashboard.php');
+    //header('Location: dashboard.php');
+    redirect('dashboard.php');
     exit;
 }
 
@@ -47,12 +47,12 @@ include 'templates/header.php';
     <input type="hidden" name="id" value="<?= $userData['id'] ?>">
     <p>
         <label>Naam:<br>
-            <input type="text" name="name" value="<?= htmlspecialchars($userData['name']) ?>" required>
+            <input type="text" name="name" value="<?= escapeHtml($userData['name']) ?>" required>
         </label>
     </p>
     <p>
         <label>Email:<br>
-            <input type="email" name="email" value="<?= htmlspecialchars($userData['email']) ?>" required>
+            <input type="email" name="email" value="<?= escapeHtml($userData['email']) ?>" required>
         </label>
     </p>
     <p>

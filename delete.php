@@ -1,5 +1,4 @@
 <?php
-require_once 'config/config.php';
 require_once 'classes/Auth.php';
 require_once 'classes/User.php';
 require_once 'helpers/functions.php';
@@ -17,6 +16,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['id'])) {
     $user->deleteUser($id);
 }
 
-header('Location: dashboard.php');
+//header('Location: dashboard.php');
+redirect('dashboard.php');
 exit;
 

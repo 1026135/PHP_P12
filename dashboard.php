@@ -1,5 +1,4 @@
 <?php
-require_once 'config/config.php';
 require_once 'classes/Auth.php';
 require_once 'classes/User.php';
 require_once 'helpers/functions.php';
@@ -20,7 +19,7 @@ $pageTitle = "Dashboard";
 include 'templates/header.php'; 
 ?>
 <h2>Dashboard</h2>
-<p>Welkom, <?= htmlspecialchars($auth->getUser()['name']) ?> | <a href="logout.php">Uitloggen</a></p>
+<p>Welkom, <?= escapeHtml($auth->getUser()['name']) ?> | <a href="logout.php">Uitloggen</a></p>
 
 <table border="1">
     <tr>
@@ -30,8 +29,8 @@ include 'templates/header.php';
     </tr>
     <?php foreach ($users as $user): ?>
     <tr>
-        <td><?= htmlspecialchars($user['name']) ?></td>
-        <td><?= htmlspecialchars($user['email']) ?></td>
+        <td><?= escapeHtml($user['name']) ?></td>
+        <td><?= escapeHtml($user['email']) ?></td>
         <td>
             <a href="view.php?id=<?= $user['id'] ?>">Bekijken</a> |
             <a href="edit.php?id=<?= $user['id'] ?>">Bewerken</a> |

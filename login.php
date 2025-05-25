@@ -1,5 +1,4 @@
 <?php
-require_once 'config/config.php';
 require_once 'classes/Auth.php';
 require_once 'helpers/functions.php';
 
@@ -7,8 +6,7 @@ $auth = new Auth();
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $email = trim($_POST['email'] ?? '');
-    $password = trim($_POST['password'] ?? '');
-
+    $password = $_POST['password'] ?? '';
 
     if ($auth->login($email, $password)) {
         //header('Location: dashboard.php');
