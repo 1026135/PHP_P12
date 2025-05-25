@@ -1,0 +1,49 @@
+<?php
+require_once 'Database.php';
+
+class Auth extends Database
+{
+    public function __construct()
+    {
+        parent::__construct();
+        if (session_status() === PHP_SESSION_NONE) {
+            session_start();
+        }
+    }
+
+    public function login($email, $password)
+    {
+        $sql = "SELECT id, name, email, password FROM users WHERE email = :email";
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute([':email' => $email]);
+        $user = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        if ($user && password_verify($password, $user['password'])) {
+            $_SESSION['user'] = [
+                'id' => $user['id'],
+                'name' => $user['name'],
+                'email' => $user['email']
+            ];
+            return true;
+        }
+        return false;
+    }
+
+    public function isLoggedIn()
+    {
+        return isset($_SESSION['user']);
+    }
+
+    public function getUser()
+    {
+        return $this->isLoggedIn() ? $_SESSION['user'] : null;
+    }
+
+    public function logout()
+    {
+        unset($_SESSION['user']);
+        session_destroy();
+        return true;
+    }
+}
+
