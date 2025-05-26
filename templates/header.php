@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title><?php echo isset($pageTitle) ? htmlspecialchars($pageTitle) : 'My Website'; ?></title>
+    <title><?php echo isset($pageTitle) ? escapeHtml($pageTitle) : 'My Website'; ?></title>
     <link rel="stylesheet" href="#" />
 </head>
 <body>

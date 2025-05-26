@@ -14,7 +14,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $error = "E-mailadres bestaat al.";
     } else {
         $user->addUser($name, $email, $password);
-        //header('Location: login.php');
         redirect('login.php');
         exit;
     }

@@ -4,13 +4,11 @@ require_once 'helpers/functions.php';
 
 $auth = new Auth();
 if (!$auth->isLoggedIn()) {
-    //header('Location: login.php');
     redirect('login.php');
     exit;
 }
 
 if (!isset($_GET['id'])) {
-    //header('Location: dashboard.php');
     redirect('dashboard.php');
     exit;
 }
@@ -25,7 +23,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // You might want to add validation here
 
     $user->updateUser($id, $name, $email);
-    //header('Location: dashboard.php');
     redirect('dashboard.php');
     exit;
 }
