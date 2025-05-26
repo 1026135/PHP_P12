@@ -11,22 +11,29 @@ class Auth extends Database
     
     public function login($email, $password)
     {
-        $sql = "SELECT id, name, email, password FROM users WHERE email = :email";
+        $sql = "
+            SELECT users.id, users.name, users.email, users.password, roles.role_name 
+            FROM users 
+            JOIN roles ON users.role_id = roles.id 
+            WHERE users.email = :email
+        ";
         $stmt = $this->pdo->prepare($sql);
         $stmt->execute([':email' => $email]);
         $user = $stmt->fetch(PDO::FETCH_ASSOC);
-
+    
         if ($user && password_verify($password, $user['password'])) {
             session_regenerate_id(true);
             $_SESSION['user'] = [
                 'id' => $user['id'],
                 'name' => $user['name'],
-                'email' => $user['email']
+                'email' => $user['email'],
+                'role' => $user['role_name']
             ];
             return true;
         }
         return false;
     }
+
 
     public function isLoggedIn()
     {
@@ -43,6 +50,11 @@ class Auth extends Database
         unset($_SESSION['user']);
         session_destroy();
         return true;
+    }
+
+    public function isAdmin()
+    {
+        return $this->isLoggedIn() && $_SESSION['user']['role'] === 'admin';
     }
 }
 
