@@ -1,6 +1,5 @@
 <?php
-require_once 'classes/Auth.php';
-require_once 'classes/User.php';
+require_once 'init.php';
 require_once 'helpers/functions.php';
 
 $auth = new Auth();

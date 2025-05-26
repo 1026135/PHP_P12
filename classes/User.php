@@ -4,6 +4,11 @@ require_once 'Database.php';
 class User extends Database
 {
 
+    public function __construct()
+    {
+        parent::__construct();
+    }
+
     public function addUser($name, $email, $password)
     {
         $sql = "INSERT INTO users (name, email, password) VALUES (:name, :email, :password)";

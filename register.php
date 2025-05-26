@@ -1,5 +1,5 @@
 <?php
-require_once 'classes/User.php';
+require_once 'init.php';
 require_once 'helpers/functions.php';
 
 $user = new User();

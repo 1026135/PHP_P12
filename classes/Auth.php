@@ -3,14 +3,12 @@ require_once 'Database.php';
 
 class Auth extends Database
 {
+
     public function __construct()
     {
         parent::__construct();
-        if (session_status() === PHP_SESSION_NONE) {
-            session_start();
-        }
     }
-
+    
     public function login($email, $password)
     {
         $sql = "SELECT id, name, email, password FROM users WHERE email = :email";
