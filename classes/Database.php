@@ -1,4 +1,6 @@
 <?php
+require_once 'config/config.php';
+
 abstract class Database 
 {
     protected $pdo;
