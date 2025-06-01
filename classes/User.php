@@ -9,15 +9,16 @@ class User extends Database
         parent::__construct();
     }
 
-    public function addUser($name, $email, $password)
+    public function addUser($name, $email, $password, $role = '1')
     {
-        $sql = "INSERT INTO users (name, email, password) VALUES (:name, :email, :password)";
+        $sql = "INSERT INTO users (name, email, password, :role_id) VALUES (:name, :email, :password)";
         $stmt = $this->pdo->prepare($sql);
         $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
         $stmt->execute([
             ':name' => $name,
             ':email' => $email,
             ':password' => $hashedPassword
+            ':role_id' => $role
         ]);
         return $this->pdo->lastInsertId();
     }
