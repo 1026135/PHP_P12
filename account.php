@@ -3,56 +3,77 @@ require_once 'init.php';
 
 $auth = new Auth();
 if (!$auth->isLoggedIn()) {
-    redirect('login.php');
+    header('Location: login.php');
     exit;
 }
 
 $userObj = new User();
 $currentUser = $auth->getUser();
+
 $userData = $userObj->getUserById($currentUser['id']);
-$successMessage = '';
-$errorMessage = '';
+if (!$userData) {
+    echo "Gebruiker niet gevonden.";
+    exit;
+}
 
-// PROFIEL WIJZIGEN
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'update_profile') {
-    $name = trim($_POST['name']);
-    $email = trim($_POST['email']);
+$errors = [];
+$success = '';
 
-    if (!empty($name) && !empty($email)) {
-        $userObj->updateUser($currentUser['id'], $name, $email);
-        $_SESSION['user']['name'] = $name;
-        $_SESSION['user']['email'] = $email;
-        $successMessage = "Profiel succesvol bijgewerkt.";
-        $userData = $userObj->getUserById($currentUser['id']);
-    } else {
-        $errorMessage = "Alle velden zijn verplicht.";
+// Profiel updaten
+if (isset($_POST['update_profile'])) {
+    $name = trim($_POST['name'] ?? '');
+    $email = trim($_POST['email'] ?? '');
+
+    // Simpele validaties
+    if (empty($name)) {
+        $errors[] = "Naam is verplicht.";
+    }
+    if (empty($email) || !filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        $errors[] = "Een geldig e-mailadres is verplicht.";
+    }
+    // Check of email al in gebruik is door een andere gebruiker
+    $existingUser = $userObj->getUserByEmail($email);
+    if ($existingUser && $existingUser['id'] != $currentUser['id']) {
+        $errors[] = "Dit e-mailadres is al in gebruik.";
+    }
+
+    if (empty($errors)) {
+        if ($userObj->updateUser($currentUser['id'], $name, $email)) {
+            $success = "Profiel succesvol bijgewerkt.";
+            // Update sessie naam en email
+            $_SESSION['user']['name'] = $name;
+            $_SESSION['user']['email'] = $email;
+            // Refresh data
+            $userData = $userObj->getUserById($currentUser['id']);
+        } else {
+            $errors[] = "Er is een fout opgetreden bij het bijwerken van het profiel.";
+        }
     }
 }
 
-// WACHTWOORD WIJZIGEN
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'update_password') {
-    $currentPassword = $_POST['current_password'];
-    $newPassword = $_POST['new_password'];
-    $confirmPassword = $_POST['confirm_password'];
+// Wachtwoord wijzigen
+if (isset($_POST['change_password'])) {
+    $currentPassword = $_POST['current_password'] ?? '';
+    $newPassword = $_POST['new_password'] ?? '';
+    $confirmPassword = $_POST['confirm_password'] ?? '';
 
-    $stmt = $userObj->pdo->prepare("SELECT password FROM users WHERE id = :id");
-    $stmt->execute([':id' => $currentUser['id']]);
-    $storedHash = $stmt->fetchColumn();
-
-    if (!password_verify($currentPassword, $storedHash)) {
-        $errorMessage = "Huidig wachtwoord is onjuist.";
-    } elseif ($newPassword !== $confirmPassword) {
-        $errorMessage = "Nieuwe wachtwoorden komen niet overeen.";
-    } elseif (strlen($newPassword) < 6) {
-        $errorMessage = "Nieuw wachtwoord moet minimaal 6 tekens lang zijn.";
+    if (empty($currentPassword) || empty($newPassword) || empty($confirmPassword)) {
+        $errors[] = "Vul alle velden voor wachtwoordwijziging in.";
     } else {
-        $hashedPassword = password_hash($newPassword, PASSWORD_DEFAULT);
-        $stmt = $userObj->pdo->prepare("UPDATE users SET password = :password WHERE id = :id");
-        $stmt->execute([
-            ':password' => $hashedPassword,
-            ':id' => $currentUser['id']
-        ]);
-        $successMessage = "Wachtwoord succesvol gewijzigd.";
+        // Check huidig wachtwoord
+        if (!password_verify($currentPassword, $userData['password'])) {
+            $errors[] = "Huidig wachtwoord is onjuist.";
+        } elseif ($newPassword !== $confirmPassword) {
+            $errors[] = "Nieuwe wachtwoorden komen niet overeen.";
+        } elseif (strlen($newPassword) < 6) {
+            $errors[] = "Nieuw wachtwoord moet minimaal 6 tekens lang zijn.";
+        } else {
+            if ($userObj->updatePassword($currentUser['id'], $newPassword)) {
+                $success = "Wachtwoord succesvol gewijzigd.";
+            } else {
+                $errors[] = "Er is een fout opgetreden bij het wijzigen van het wachtwoord.";
+            }
+        }
     }
 }
 ?>
@@ -61,48 +82,66 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
 $pageTitle = "Mijn Account";
 include 'templates/header.php'; 
 ?>
+
 <h2>Mijn Account</h2>
 
-<?php if ($successMessage): ?>
-    <p style="color: green;"><?= $successMessage ?></p>
-<?php endif; ?>
-<?php if ($errorMessage): ?>
-    <p style="color: red;"><?= $errorMessage ?></p>
+<?php if (!empty($errors)): ?>
+    <div style="color:red;">
+        <ul>
+            <?php foreach ($errors as $err): ?>
+                <li><?= htmlspecialchars($err) ?></li>
+            <?php endforeach; ?>
+        </ul>
+    </div>
 <?php endif; ?>
 
-<h3>Profielgegevens</h3>
+<?php if ($success): ?>
+    <p style="color:green;"><?= htmlspecialchars($success) ?></p>
+<?php endif; ?>
+
+<!-- Profiel formulier -->
+<h3>Profiel bewerken</h3>
 <form method="post">
-    <input type="hidden" name="action" value="update_profile">
-    <label>Naam:<br>
-        <input type="text" name="name" value="<?= htmlspecialchars($userData['name']) ?>" required>
-    </label><br><br>
-
-    <label>Email:<br>
-        <input type="email" name="email" value="<?= htmlspecialchars($userData['email']) ?>" required>
-    </label><br><br>
-
-    <button type="submit">Profiel opslaan</button>
+    <input type="hidden" name="update_profile" value="1">
+    <p>
+        <label>Naam:<br>
+            <input type="text" name="name" value="<?= htmlspecialchars($userData['name']) ?>" required>
+        </label>
+    </p>
+    <p>
+        <label>Email:<br>
+            <input type="email" name="email" value="<?= htmlspecialchars($userData['email']) ?>" required>
+        </label>
+    </p>
+    <p>
+        <button type="submit">Profiel opslaan</button>
+    </p>
 </form>
 
 <hr>
 
+<!-- Wachtwoord wijzigen formulier -->
 <h3>Wachtwoord wijzigen</h3>
 <form method="post">
-    <input type="hidden" name="action" value="update_password">
-    
-    <label>Huidig wachtwoord:<br>
-        <input type="password" name="current_password" required>
-    </label><br><br>
-
-    <label>Nieuw wachtwoord:<br>
-        <input type="password" name="new_password" required>
-    </label><br><br>
-
-    <label>Herhaal nieuw wachtwoord:<br>
-        <input type="password" name="confirm_password" required>
-    </label><br><br>
-
-    <button type="submit">Wachtwoord opslaan</button>
+    <input type="hidden" name="change_password" value="1">
+    <p>
+        <label>Huidig wachtwoord:<br>
+            <input type="password" name="current_password" required>
+        </label>
+    </p>
+    <p>
+        <label>Nieuw wachtwoord:<br>
+            <input type="password" name="new_password" required>
+        </label>
+    </p>
+    <p>
+        <label>Bevestig nieuw wachtwoord:<br>
+            <input type="password" name="confirm_password" required>
+        </label>
+    </p>
+    <p>
+        <button type="submit">Wachtwoord wijzigen</button>
+    </p>
 </form>
 
 <?php include 'templates/footer.php'; ?>

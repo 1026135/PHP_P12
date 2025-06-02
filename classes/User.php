@@ -10,21 +10,21 @@ class User extends Database
     }
 
     public function addUser($name, $email, $password, $role_id = 1)
-{
-    $sql = "
-        INSERT INTO users (name, email, password, role_id) 
-        VALUES (:name, :email, :password, :role_id)
+    {
+        $sql = "
+            INSERT INTO users (name, email, password, role_id) 
+            VALUES (:name, :email, :password, :role_id)
         ";
-    $stmt = $this->pdo->prepare($sql);
-    $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
-    $stmt->execute([
-        ':name' => $name,
-        ':email' => $email,
-        ':password' => $hashedPassword,
-        ':role_id' => $role_id
+        $stmt = $this->pdo->prepare($sql);
+        $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
+        $stmt->execute([
+            ':name' => $name,
+            ':email' => strtolower(trim($email)),
+            ':password' => $hashedPassword,
+            ':role_id' => $role_id
     ]);
     return $this->pdo->lastInsertId();
-}
+    }
 
 
     public function getAllUsers()
@@ -33,7 +33,7 @@ class User extends Database
             SELECT u.id, u.name, u.email, r.role_name 
             FROM users u 
             JOIN roles r ON u.role_id = r.id
-            ";
+        ";
         $stmt = $this->pdo->query($sql);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
@@ -45,7 +45,7 @@ class User extends Database
             FROM users u 
             JOIN roles r ON u.role_id = r.id 
             WHERE u.id = :id
-            ";
+        ";
         $stmt = $this->pdo->prepare($sql);
         $stmt->execute([':id' => $id]);
         return $stmt->fetch(PDO::FETCH_ASSOC);
@@ -55,8 +55,9 @@ class User extends Database
     {
         $sql = "
             UPDATE users 
-            SET name = :name, email = :email WHERE id = :id
-            ";
+            SET name = :name, email = :email 
+            WHERE id = :id
+        ";
         $stmt = $this->pdo->prepare($sql);
         return $stmt->execute([
             ':name' => $name,
@@ -76,13 +77,94 @@ class User extends Database
     {
         $sql = "
             SELECT COUNT(*) 
-            FROM users WHERE email = :email
-            ";
+            FROM users 
+            WHERE email = :email
+        ";
         $stmt = $this->pdo->prepare($sql);
         $stmt->execute([':email' => $email]);
         return $stmt->fetchColumn() > 0;
     }
+
+    
+
+    public function getUserByEmail($email)
+    {
+        $sql = "SELECT * FROM users WHERE email = :email";
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute([':email' => $email]);
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+
+    public function updatePassword($id, $newPassword)
+    {
+        $hashed = password_hash($newPassword, PASSWORD_DEFAULT);
+        $sql = "UPDATE users SET password = :password WHERE id = :id";
+        $stmt = $this->pdo->prepare($sql);
+        return $stmt->execute([
+            ':password' => $hashed,
+            ':id' => $id
+        ]);
+    }
+
+    public function getUsersByRole($roleName)
+    {
+        $sql = "
+            SELECT u.id, u.name, u.email, r.role_name 
+            FROM users u 
+            JOIN roles r ON u.role_id = r.id 
+            WHERE r.role_name = :role_name
+        ";
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute([':role_name' => $roleName]);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
 }
 ?>
 
+
+
+
+
+
+public function changePassword($id, $currentPassword, $newPassword, $confirmPassword)
+    {
+
+        if ($newPassword !== $confirmPassword) {
+            return ['success' => false, 'message' => 'Nieuw wachtwoord en bevestiging komen niet overeen.'];
+        }
+
+        $sql = "
+            SELECT password 
+            FROM users 
+            WHERE id = :id
+        ";
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute([':id' => $id]);
+        $storedHash = $stmt->fetchColumn();
+
+        if (!$storedHash || !password_verify($currentPassword, $storedHash)) {
+            return ['success' => false, 'message' => 'Huidig wachtwoord is onjuist.'];
+        }
+
+        if (password_verify($newPassword, $storedHash)) {
+            return ['success' => false, 'message' => 'Nieuw wachtwoord mag niet hetzelfde zijn als het huidige.'];
+        }
+
+
+        $hashedPassword = password_hash($newPassword, PASSWORD_DEFAULT);
+
+        $sql = "
+            UPDATE users 
+            SET password = :password 
+            WHERE id = :id
+        ";
+        $updateStmt = $this->pdo->prepare($sql);
+        $updateStmt->execute([
+            ':password' => $hashedPassword,
+            ':id' => $id
+        ]);
+
+        return ['success' => true, 'message' => 'Wachtwoord succesvol gewijzigd.'];
+    }
 
