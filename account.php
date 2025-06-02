@@ -104,7 +104,6 @@ include 'templates/header.php';
     <p style="color:green;"><?= escapeHtml($success) ?></p>
 <?php endif; ?>
 
-<!-- Profiel formulier -->
 <h3>Profiel bewerken</h3>
 <form method="post">
     <input type="hidden" name="update_profile" value="1">
@@ -125,7 +124,6 @@ include 'templates/header.php';
 
 <hr>
 
-<!-- Wachtwoord wijzigen formulier -->
 <h3>Wachtwoord wijzigen</h3>
 <form method="post">
     <input type="hidden" name="change_password" value="1">
