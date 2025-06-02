@@ -16,7 +16,7 @@ $pageTitle = "Dashboard";
 include 'templates/header.php'; 
 ?>
 <h2>Dashboard</h2>
-<p>Welkom, <?= escapeHtml($auth->getUser()['name']) ?> | <a href="logout.php">Uitloggen</a></p>
+<p>Welkom, <?= escapeHtml($auth->getUser()['name']) ?> | <a href="account.php">Mijn account</a> | <a href="logout.php">Uitloggen</a> </p>
 
 <table border="1">
     <tr>

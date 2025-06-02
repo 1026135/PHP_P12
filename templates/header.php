@@ -13,6 +13,7 @@
                 <li><a href="dashboard.php">Home</a></li>
                 <li><a href="logout.php">Uitloggen</a></li>
                 <li><a href="register.php">Registreren</a></li>
+                <li><a href="account.php">Mijn account</a></li>
             </ul>
         </nav>
     </header>
