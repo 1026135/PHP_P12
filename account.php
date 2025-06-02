@@ -68,8 +68,8 @@ if (isset($_POST['change_password'])) {
             $errors[] = "Huidig wachtwoord is onjuist.";
         } elseif ($newPassword !== $confirmPassword) {
             $errors[] = "Nieuwe wachtwoorden komen niet overeen.";
-        } elseif (strlen($newPassword) < 6) {
-            $errors[] = "Nieuw wachtwoord moet minimaal 6 tekens lang zijn.";
+        } elseif (strlen($newPassword) < 4) {
+            $errors[] = "Nieuw wachtwoord moet minimaal 4 tekens lang zijn.";
         } else {
             if ($userObj->updatePassword($currentUser['id'], $newPassword)) {
                 $success = "Wachtwoord succesvol gewijzigd.";
