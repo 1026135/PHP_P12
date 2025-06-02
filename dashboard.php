@@ -28,6 +28,7 @@ include 'templates/header.php';
     <tr>
         <td><?= escapeHtml($user['name']) ?></td>
         <td><?= escapeHtml($user['email']) ?></td>
+        <td><?= escapeHtml($user['role_name'] ?? 'onbekend') ?></td>
         <td>
             <a href="view.php?id=<?= $user['id'] ?>">Bekijken</a> |
             <a href="edit.php?id=<?= $user['id'] ?>">Bewerken</a> |

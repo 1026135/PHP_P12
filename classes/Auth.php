@@ -12,10 +12,10 @@ class Auth extends Database
     public function login($email, $password)
     {
         $sql = "
-            SELECT users.id, users.name, users.email, users.password, roles.role_name 
-            FROM users 
-            JOIN roles ON users.role_id = roles.id 
-            WHERE users.email = :email
+            SELECT u.id, u.name, u.email, u.password, r.role_name 
+            FROM users u 
+            JOIN roles r ON u.role_id = r.id 
+            WHERE email = :email
         ";
         $stmt = $this->pdo->prepare($sql);
         $stmt->execute([':email' => $email]);
