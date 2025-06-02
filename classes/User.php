@@ -22,7 +22,7 @@ class User extends Database
             ':email' => strtolower(trim($email)),
             ':password' => $hashedPassword,
             ':role_id' => $role_id
-    ]);
+        ]);
     return $this->pdo->lastInsertId();
     }
 
@@ -68,9 +68,14 @@ class User extends Database
 
     public function deleteUser($id)
     {
-        $sql = "DELETE FROM users WHERE id = :id";
+        $sql = "
+            DELETE FROM users 
+            WHERE id = :id
+        ";
         $stmt = $this->pdo->prepare($sql);
-        return $stmt->execute([':id' => $id]);
+        return $stmt->execute([
+            ':id' => $id
+        ]);
     }
 
     public function emailExists($email)
@@ -81,27 +86,53 @@ class User extends Database
             WHERE email = :email
         ";
         $stmt = $this->pdo->prepare($sql);
-        $stmt->execute([':email' => $email]);
+        $stmt->execute([
+            ':email' => $email
+        ]);
         return $stmt->fetchColumn() > 0;
     }
 
     
 
+    public function getPasswordHashByUserId($id)
+    {
+        $sql = "
+            SELECT password 
+            FROM users 
+            WHERE id = :id
+        ";
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute([
+            ':id' => $id
+        ]);
+        return $stmt->fetchColumn();
+    }
+
     public function getUserByEmail($email)
     {
-        $sql = "SELECT * FROM users WHERE email = :email";
+        $sql = "
+            SELECT * 
+            FROM users 
+            WHERE email = :email
+        ";
         $stmt = $this->pdo->prepare($sql);
-        $stmt->execute([':email' => $email]);
+        $stmt->execute([
+            ':email' => $email
+        ]);
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
-    public function updatePassword($id, $newPassword)
+   public function updatePassword($id, $newPassword)
     {
-        $hashed = password_hash($newPassword, PASSWORD_DEFAULT);
-        $sql = "UPDATE users SET password = :password WHERE id = :id";
+        $hashedPassword = password_hash($newPassword, PASSWORD_DEFAULT);
+        $sql = "
+            UPDATE users 
+            SET password = :password 
+            WHERE id = :id 
+        ";
         $stmt = $this->pdo->prepare($sql);
         return $stmt->execute([
-            ':password' => $hashed,
+            ':password' => $hashedPassword, 
             ':id' => $id
         ]);
     }
@@ -115,7 +146,9 @@ class User extends Database
             WHERE r.role_name = :role_name
         ";
         $stmt = $this->pdo->prepare($sql);
-        $stmt->execute([':role_name' => $roleName]);
+        $stmt->execute([
+            ':role_name' => $roleName
+        ]);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 }

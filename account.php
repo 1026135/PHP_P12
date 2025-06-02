@@ -16,6 +16,9 @@ if (!$userData) {
     exit;
 }
 
+// Get the hashed password separately
+$passwordHash = $userObj->getPasswordHashByUserId($currentUser['id']);
+
 $errors = [];
 $success = '';
 
@@ -61,7 +64,7 @@ if (isset($_POST['change_password'])) {
         $errors[] = "Vul alle velden voor wachtwoordwijziging in.";
     } else {
         // Check huidig wachtwoord
-        if (!password_verify($currentPassword, $userData['password'])) {
+        if (!password_verify($currentPassword, $passwordHash)) {
             $errors[] = "Huidig wachtwoord is onjuist.";
         } elseif ($newPassword !== $confirmPassword) {
             $errors[] = "Nieuwe wachtwoorden komen niet overeen.";
@@ -70,12 +73,19 @@ if (isset($_POST['change_password'])) {
         } else {
             if ($userObj->updatePassword($currentUser['id'], $newPassword)) {
                 $success = "Wachtwoord succesvol gewijzigd.";
+                // Refresh the password hash after update
+                $passwordHash = $userObj->getPasswordHashByUserId($currentUser['id']);
             } else {
                 $errors[] = "Er is een fout opgetreden bij het wijzigen van het wachtwoord.";
             }
         }
     }
 }
+
+function escapeHtml($string) {
+    return htmlspecialchars($string, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+}
+
 ?>
 
 <?php 
@@ -88,15 +98,15 @@ include 'templates/header.php';
 <?php if (!empty($errors)): ?>
     <div style="color:red;">
         <ul>
-            <?php foreach ($errors as $err): ?>
-                <li><?= htmlspecialchars($err) ?></li>
+            <?php foreach ($errors as $error): ?>
+                <li><?= escapeHtml($error) ?></li>
             <?php endforeach; ?>
         </ul>
     </div>
 <?php endif; ?>
 
 <?php if ($success): ?>
-    <p style="color:green;"><?= htmlspecialchars($success) ?></p>
+    <p style="color:green;"><?= escapeHtml($success) ?></p>
 <?php endif; ?>
 
 <!-- Profiel formulier -->
@@ -105,12 +115,12 @@ include 'templates/header.php';
     <input type="hidden" name="update_profile" value="1">
     <p>
         <label>Naam:<br>
-            <input type="text" name="name" value="<?= htmlspecialchars($userData['name']) ?>" required>
+            <input type="text" name="name" value="<?= escapeHtml($userData['name']) ?>" required>
         </label>
     </p>
     <p>
         <label>Email:<br>
-            <input type="email" name="email" value="<?= htmlspecialchars($userData['email']) ?>" required>
+            <input type="email" name="email" value="<?= escapeHtml($userData['email']) ?>" required>
         </label>
     </p>
     <p>
