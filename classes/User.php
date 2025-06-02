@@ -118,53 +118,5 @@ class User extends Database
         $stmt->execute([':role_name' => $roleName]);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
-
 }
 ?>
-
-
-
-
-
-
-public function changePassword($id, $currentPassword, $newPassword, $confirmPassword)
-    {
-
-        if ($newPassword !== $confirmPassword) {
-            return ['success' => false, 'message' => 'Nieuw wachtwoord en bevestiging komen niet overeen.'];
-        }
-
-        $sql = "
-            SELECT password 
-            FROM users 
-            WHERE id = :id
-        ";
-        $stmt = $this->pdo->prepare($sql);
-        $stmt->execute([':id' => $id]);
-        $storedHash = $stmt->fetchColumn();
-
-        if (!$storedHash || !password_verify($currentPassword, $storedHash)) {
-            return ['success' => false, 'message' => 'Huidig wachtwoord is onjuist.'];
-        }
-
-        if (password_verify($newPassword, $storedHash)) {
-            return ['success' => false, 'message' => 'Nieuw wachtwoord mag niet hetzelfde zijn als het huidige.'];
-        }
-
-
-        $hashedPassword = password_hash($newPassword, PASSWORD_DEFAULT);
-
-        $sql = "
-            UPDATE users 
-            SET password = :password 
-            WHERE id = :id
-        ";
-        $updateStmt = $this->pdo->prepare($sql);
-        $updateStmt->execute([
-            ':password' => $hashedPassword,
-            ':id' => $id
-        ]);
-
-        return ['success' => true, 'message' => 'Wachtwoord succesvol gewijzigd.'];
-    }
-
