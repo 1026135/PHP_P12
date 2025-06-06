@@ -16,7 +16,6 @@ if (!$userData) {
     exit;
 }
 
-// Get the hashed password separately
 $passwordHash = $userObj->getPasswordHashByUserId($currentUser['id']);
 
 $errors = [];
