@@ -6,6 +6,5 @@ $auth->logout();
 
 setFlash("Je bent succesvol uitgelogd.", "info");
 redirect('login.php');
-exit;
 ?>
 

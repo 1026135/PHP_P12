@@ -5,13 +5,11 @@ $auth = new Auth();
 if (!$auth->isLoggedIn()) {
     setFlash("Je moet ingelogd zijn om dit te bekijken.", "error");
     redirect('login.php');
-    exit;
 }
 
 if (!isset($_GET['id'])) {
     setFlash("Geen gebruiker gespecificeerd.", "error");
     redirect('dashboard.php');
-    exit;
 }
 
 $user = new User();
@@ -26,14 +24,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $user->updateUser($id, $name, $email);
     setFlash("Gebruiker succesvol bijgewerkt.", "success");
     redirect('dashboard.php');
-    exit;
 }
 
 $userData = $user->getUserById((int)$_GET['id']);
 if (!$userData) {
     setFlash("Gebruiker niet gevonden.", "error");
     redirect('dashboard.php');
-    exit;
 }
 ?>
 

@@ -17,8 +17,7 @@ abstract class Database
             echo "Database connection failed: " . $error->getMessage(); // Vervang met error_log() voor actuele situatie
 
             setFlash("Er is een technisch probleem. Probeer het later opnieuw.", "error"); // optioneel, als sessie beschikbaar is
-            redirect("Location: error.php");
-            exit;
+            redirect("Location: error.php"); // Maak error.php
         }
     }
 }

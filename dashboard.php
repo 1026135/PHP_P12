@@ -4,7 +4,6 @@ require_once 'init.php';
 $auth = new Auth();
 if (!$auth->isLoggedIn()) {
     redirect('login.php');
-    exit;
 }
 
 $user = new User();

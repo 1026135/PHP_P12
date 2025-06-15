@@ -10,11 +10,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if ($auth->login($email, $password)) {
         setFlash("Welkom terug!", "success");
         redirect('dashboard.php');
-        exit;
     } else {
         setFlash("Ongeldige inloggegevens.", "error");
         redirect('login.php');
-        exit;
     }
 }
 ?>

@@ -11,12 +11,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if ($user->emailExists($email)) {
         setFlash("E-mailadres bestaat al.", "error");
         redirect('register.php');
-        exit;
     } else {
         $user->addUser($name, $email, $password);
         setFlash("Registratie succesvol! Je kunt nu inloggen.", "success");
         redirect('login.php');
-        exit;
     }
 }
 ?>

@@ -5,7 +5,6 @@ $auth = new Auth();
 if (!$auth->isLoggedIn()) {
     setFlash("Je moet ingelogd zijn om deze actie uit te voeren.", "error");
     redirect('login.php');
-    exit;
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['id'])) {
@@ -24,5 +23,4 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['id'])) {
 }
 
 redirect('dashboard.php');
-exit;
 ?>

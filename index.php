@@ -9,5 +9,4 @@ if ($auth->isLoggedIn()) {
 } else {
     redirect('login.php');
 }
-exit;
 ?>

@@ -5,13 +5,11 @@ $auth = new Auth();
 if (!$auth->isLoggedIn()) {
     setFlash("Je moet ingelogd zijn om deze pagina te bekijken.", "error");
     redirect('login.php');
-    exit;
 }
 
 if (!isset($_GET['id'])) {
     setFlash("Geen gebruiker geselecteerd.", "error");
     redirect('dashboard.php');
-    exit;
 }
 
 $user = new User();
@@ -20,7 +18,6 @@ $userData = $user->getUserById((int)$_GET['id']);
 if (!$userData) {
     setFlash("Gebruiker niet gevonden.", "error");
     redirect('dashboard.php');
-    exit;
 }
 ?>
 

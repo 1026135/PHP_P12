@@ -4,20 +4,18 @@ require_once 'init.php';
 $auth = new Auth();
 if (!$auth->isLoggedIn()) {
     header('Location: login.php');
-    exit;
 }
 
-$userObj = new User();
+$user = new User();
 $currentUser = $auth->getUser();
 
-$userData = $userObj->getUserById($currentUser['id']);
+$userData = $user->getUserById($currentUser['id']);
 if (!$userData) {
     setFlash("Gebruiker niet gevonden.", "error");
     redirect('login.php');
-    exit;
 }
 
-$passwordHash = $userObj->getPasswordHashByUserId($currentUser['id']);
+$passwordHash = $user->getPasswordHashByUserId($currentUser['id']);
 
 // Profiel updaten
 if (isset($_POST['update_profile'])) {
@@ -29,11 +27,11 @@ if (isset($_POST['update_profile'])) {
     } elseif (empty($email) || !filter_var($email, FILTER_VALIDATE_EMAIL)) {
         setFlash("Een geldig e-mailadres is verplicht.", "error");
     } else {
-        $existingUser = $userObj->getUserByEmail($email);
+        $existingUser = $user->getUserByEmail($email);
         if ($existingUser && $existingUser['id'] != $currentUser['id']) {
             setFlash("Dit e-mailadres is al in gebruik.", "error");
         } else {
-            if ($userObj->updateUser($currentUser['id'], $name, $email)) {
+            if ($user->updateUser($currentUser['id'], $name, $email)) {
                 $_SESSION['user']['name'] = $name;
                 $_SESSION['user']['email'] = $email;
                 setFlash("Profiel succesvol bijgewerkt.", "success");
@@ -43,7 +41,6 @@ if (isset($_POST['update_profile'])) {
         }
     }
     redirect('account.php');
-    exit;
 }
 
 // Wachtwoord wijzigen
@@ -61,39 +58,22 @@ if (isset($_POST['change_password'])) {
     } elseif (strlen($newPassword) < 4) {
         setFlash("Nieuw wachtwoord moet minimaal 4 tekens lang zijn.", "error");
     } else {
-        if ($userObj->updatePassword($currentUser['id'], $newPassword)) {
-            $passwordHash = $userObj->getPasswordHashByUserId($currentUser['id']);
+        if ($user->updatePassword($currentUser['id'], $newPassword)) {
+            $passwordHash = $user->getPasswordHashByUserId($currentUser['id']);
             setFlash("Wachtwoord succesvol gewijzigd.", "success");
         } else {
             setFlash("Fout bij wijzigen van wachtwoord.", "error");
         }
     }
     redirect('account.php');
-    exit;
 }
-
 ?>
 
 <?php 
 $pageTitle = "Mijn Account";
 include 'templates/header.php'; 
 ?>
-
 <h2>Mijn Account</h2>
-
-<?php if (!empty($errors)): ?>
-    <div style="color:red;">
-        <ul>
-            <?php foreach ($errors as $error): ?>
-                <li><?= escapeHtml($error) ?></li>
-            <?php endforeach; ?>
-        </ul>
-    </div>
-<?php endif; ?>
-
-<?php if ($success): ?>
-    <p style="color:green;"><?= escapeHtml($success) ?></p>
-<?php endif; ?>
 
 <h3>Profiel bewerken</h3>
 <form method="post">
