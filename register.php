@@ -8,11 +8,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $email = trim($_POST['email'] ?? '');
     $password = $_POST['password'] ?? '';
 
-
     if ($user->emailExists($email)) {
-        $error = "E-mailadres bestaat al.";
+        setFlash("E-mailadres bestaat al.", "error");
+        redirect('register.php');
+        exit;
     } else {
         $user->addUser($name, $email, $password);
+        setFlash("Registratie succesvol! Je kunt nu inloggen.", "success");
         redirect('login.php');
         exit;
     }

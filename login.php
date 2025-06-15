@@ -8,10 +8,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $password = $_POST['password'] ?? '';
 
     if ($auth->login($email, $password)) {
+        setFlash("Welkom terug!", "success");
         redirect('dashboard.php');
         exit;
     } else {
-        $error = "Ongeldige inloggegevens.";
+        setFlash("Ongeldige inloggegevens.", "error");
+        redirect('login.php');
+        exit;
     }
 }
 ?>

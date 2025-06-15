@@ -3,11 +3,13 @@ require_once 'init.php';
 
 $auth = new Auth();
 if (!$auth->isLoggedIn()) {
+    setFlash("Je moet ingelogd zijn om dit te bekijken.", "error");
     redirect('login.php');
     exit;
 }
 
 if (!isset($_GET['id'])) {
+    setFlash("Geen gebruiker gespecificeerd.", "error");
     redirect('dashboard.php');
     exit;
 }
@@ -19,16 +21,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $name = trim($_POST['name']);
     $email = trim($_POST['email']);
 
-    // You might want to add validation here
+    // (Optioneel) validatie hier toevoegen
 
     $user->updateUser($id, $name, $email);
+    setFlash("Gebruiker succesvol bijgewerkt.", "success");
     redirect('dashboard.php');
     exit;
 }
 
 $userData = $user->getUserById((int)$_GET['id']);
 if (!$userData) {
-    echo "Gebruiker niet gevonden.";
+    setFlash("Gebruiker niet gevonden.", "error");
+    redirect('dashboard.php');
     exit;
 }
 ?>

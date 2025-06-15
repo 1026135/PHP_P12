@@ -13,7 +13,11 @@ abstract class Database
         } 
         catch (PDOException $error) 
         {
-            echo "Database connection failed: " . $error->getMessage();
+            // error_log($error->getMessage()); // /xampp/apache/logs/error.log
+            echo "Database connection failed: " . $error->getMessage(); // Vervang met error_log() voor actuele situatie
+
+            setFlash("Er is een technisch probleem. Probeer het later opnieuw.", "error"); // optioneel, als sessie beschikbaar is
+            redirect("Location: error.php");
             exit;
         }
     }

@@ -7,6 +7,11 @@
     <link rel="stylesheet" href="#" />
 </head>
 <body>
+    <?php if ($flash = getFlash()): ?>
+        <div style="padding: 10px; margin: 10px 0; border: 1px solid <?= $flash['type'] === 'error' ? 'red' : 'green' ?>; color: <?= $flash['type'] === 'error' ? 'red' : 'green' ?>;">
+            <?= escapeHtml($flash['message']) ?>
+        </div>
+    <?php endif; ?>
     <header>
         <nav>
             <ul>

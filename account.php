@@ -12,45 +12,38 @@ $currentUser = $auth->getUser();
 
 $userData = $userObj->getUserById($currentUser['id']);
 if (!$userData) {
-    echo "Gebruiker niet gevonden.";
+    setFlash("Gebruiker niet gevonden.", "error");
+    redirect('login.php');
     exit;
 }
 
 $passwordHash = $userObj->getPasswordHashByUserId($currentUser['id']);
-
-$errors = [];
-$success = '';
 
 // Profiel updaten
 if (isset($_POST['update_profile'])) {
     $name = trim($_POST['name'] ?? '');
     $email = trim($_POST['email'] ?? '');
 
-    // Simpele validaties
     if (empty($name)) {
-        $errors[] = "Naam is verplicht.";
-    }
-    if (empty($email) || !filter_var($email, FILTER_VALIDATE_EMAIL)) {
-        $errors[] = "Een geldig e-mailadres is verplicht.";
-    }
-    // Check of email al in gebruik is door een andere gebruiker
-    $existingUser = $userObj->getUserByEmail($email);
-    if ($existingUser && $existingUser['id'] != $currentUser['id']) {
-        $errors[] = "Dit e-mailadres is al in gebruik.";
-    }
-
-    if (empty($errors)) {
-        if ($userObj->updateUser($currentUser['id'], $name, $email)) {
-            $success = "Profiel succesvol bijgewerkt.";
-            // Update sessie naam en email
-            $_SESSION['user']['name'] = $name;
-            $_SESSION['user']['email'] = $email;
-            // Refresh data
-            $userData = $userObj->getUserById($currentUser['id']);
+        setFlash("Naam is verplicht.", "error");
+    } elseif (empty($email) || !filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        setFlash("Een geldig e-mailadres is verplicht.", "error");
+    } else {
+        $existingUser = $userObj->getUserByEmail($email);
+        if ($existingUser && $existingUser['id'] != $currentUser['id']) {
+            setFlash("Dit e-mailadres is al in gebruik.", "error");
         } else {
-            $errors[] = "Er is een fout opgetreden bij het bijwerken van het profiel.";
+            if ($userObj->updateUser($currentUser['id'], $name, $email)) {
+                $_SESSION['user']['name'] = $name;
+                $_SESSION['user']['email'] = $email;
+                setFlash("Profiel succesvol bijgewerkt.", "success");
+            } else {
+                setFlash("Fout bij bijwerken van profiel.", "error");
+            }
         }
     }
+    redirect('account.php');
+    exit;
 }
 
 // Wachtwoord wijzigen
@@ -60,26 +53,25 @@ if (isset($_POST['change_password'])) {
     $confirmPassword = $_POST['confirm_password'] ?? '';
 
     if (empty($currentPassword) || empty($newPassword) || empty($confirmPassword)) {
-        $errors[] = "Vul alle velden voor wachtwoordwijziging in.";
+        setFlash("Vul alle velden voor wachtwoordwijziging in.", "error");
+    } elseif (!password_verify($currentPassword, $passwordHash)) {
+        setFlash("Huidig wachtwoord is onjuist.", "error");
+    } elseif ($newPassword !== $confirmPassword) {
+        setFlash("Nieuwe wachtwoorden komen niet overeen.", "error");
+    } elseif (strlen($newPassword) < 4) {
+        setFlash("Nieuw wachtwoord moet minimaal 4 tekens lang zijn.", "error");
     } else {
-        // Check huidig wachtwoord
-        if (!password_verify($currentPassword, $passwordHash)) {
-            $errors[] = "Huidig wachtwoord is onjuist.";
-        } elseif ($newPassword !== $confirmPassword) {
-            $errors[] = "Nieuwe wachtwoorden komen niet overeen.";
-        } elseif (strlen($newPassword) < 4) {
-            $errors[] = "Nieuw wachtwoord moet minimaal 4 tekens lang zijn.";
+        if ($userObj->updatePassword($currentUser['id'], $newPassword)) {
+            $passwordHash = $userObj->getPasswordHashByUserId($currentUser['id']);
+            setFlash("Wachtwoord succesvol gewijzigd.", "success");
         } else {
-            if ($userObj->updatePassword($currentUser['id'], $newPassword)) {
-                $success = "Wachtwoord succesvol gewijzigd.";
-                // Refresh the password hash after update
-                $passwordHash = $userObj->getPasswordHashByUserId($currentUser['id']);
-            } else {
-                $errors[] = "Er is een fout opgetreden bij het wijzigen van het wachtwoord.";
-            }
+            setFlash("Fout bij wijzigen van wachtwoord.", "error");
         }
     }
+    redirect('account.php');
+    exit;
 }
+
 ?>
 
 <?php 
