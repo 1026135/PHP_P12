@@ -25,4 +25,12 @@ function getFlash(): ?array {
     }
     return null;
 }
+
+
+// For troubleshooting
+function checkSessionInfo() {
+    echo '<pre>';
+    print_r($_SESSION['user']);
+    echo '</pre>';
+}
 ?>
