@@ -26,6 +26,34 @@ class User extends Database
     return $this->pdo->lastInsertId();
     }
 
+    public function updateUser($id, $name, $email)
+    {
+        $sql = "
+            UPDATE users 
+            SET name = :name, email = :email 
+            WHERE id = :id
+        ";
+        $stmt = $this->pdo->prepare($sql);
+        return $stmt->execute([
+            ':name' => $name,
+            ':email' => $email,
+            ':id' => $id
+        ]);
+    }
+
+    public function deleteUser($id)
+    {
+        $sql = "
+            DELETE FROM users 
+            WHERE id = :id
+        ";
+        $stmt = $this->pdo->prepare($sql);
+        return $stmt->execute([
+            ':id' => $id
+        ]);
+    }
+
+
 
     public function getAllUsers()
     {
@@ -66,32 +94,22 @@ class User extends Database
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    public function updateUser($id, $name, $email)
+    public function getUserByEmail($email)
     {
         $sql = "
-            UPDATE users 
-            SET name = :name, email = :email 
-            WHERE id = :id
+            SELECT u.id, u.name, u.email, r.role_name 
+            FROM users u 
+            JOIN roles r ON u.role_id = r.id 
+            WHERE email = :email
         ";
         $stmt = $this->pdo->prepare($sql);
-        return $stmt->execute([
-            ':name' => $name,
-            ':email' => $email,
-            ':id' => $id
+        $stmt->execute([
+            ':email' => $email
         ]);
+        return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
-    public function deleteUser($id)
-    {
-        $sql = "
-            DELETE FROM users 
-            WHERE id = :id
-        ";
-        $stmt = $this->pdo->prepare($sql);
-        return $stmt->execute([
-            ':id' => $id
-        ]);
-    }
+    
 
     public function emailExists($email)
     {
@@ -107,8 +125,6 @@ class User extends Database
         return $stmt->fetchColumn() > 0;
     }
 
-    
-
     public function getPasswordHashByUserId($id)
     {
         $sql = "
@@ -121,20 +137,6 @@ class User extends Database
             ':id' => $id
         ]);
         return $stmt->fetchColumn();
-    }
-
-    public function getUserByEmail($email)
-    {
-        $sql = "
-            SELECT * 
-            FROM users 
-            WHERE email = :email
-        ";
-        $stmt = $this->pdo->prepare($sql);
-        $stmt->execute([
-            ':email' => $email
-        ]);
-        return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
    public function updatePassword($id, $newPassword)
@@ -151,7 +153,5 @@ class User extends Database
             ':id' => $id
         ]);
     }
-
-    
 }
 ?>
