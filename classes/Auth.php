@@ -43,6 +43,7 @@ class Auth extends Database
         session_destroy();
         return true;
     }
+    // Login methods //
 
 
     // Get info methods//
@@ -73,7 +74,7 @@ class Auth extends Database
 
         return $_SESSION['user'];
     }
-
+    // Get info methods//
 
     // Check info methods //
     public function isLoggedIn()
@@ -85,5 +86,6 @@ class Auth extends Database
     {
         return $this->isLoggedIn() && $_SESSION['user']['role'] === 'admin';
     }
+    // Check info methods //
 }
 
