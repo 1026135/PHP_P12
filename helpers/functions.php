@@ -13,7 +13,7 @@ function escapeHtml($string) {
 function setFlash(string $message, string $type = 'success'): void {
     $_SESSION['flash'] = [
         'message' => $message,
-        'type' => $type // bv. success, error, warning
+        'type' => $type
     ];
 }
 
