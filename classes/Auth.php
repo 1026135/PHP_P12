@@ -26,10 +26,10 @@ class Auth extends Database
         if ($user && password_verify($password, $user['password'])) {
             session_regenerate_id(true);
             $_SESSION['user'] = [
-                'id' => $user['id'],
-                'name' => $user['name'],
+                'id'    => $user['id'],
+                'name'  => $user['name'],
                 'email' => $user['email'],
-                'role' => $user['role_name']
+                'role'  => $user['role_name']
             ];
             return true;
         }

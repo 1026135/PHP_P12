@@ -51,6 +51,21 @@ class User extends Database
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
+    public function getUsersByRole($roleName)
+    {
+        $sql = "
+            SELECT u.id, u.name, u.email, r.role_name 
+            FROM users u 
+            JOIN roles r ON u.role_id = r.id 
+            WHERE r.role_name = :role_name
+        ";
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute([
+            ':role_name' => $roleName
+        ]);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
     public function updateUser($id, $name, $email)
     {
         $sql = "
@@ -137,19 +152,6 @@ class User extends Database
         ]);
     }
 
-    public function getUsersByRole($roleName)
-    {
-        $sql = "
-            SELECT u.id, u.name, u.email, r.role_name 
-            FROM users u 
-            JOIN roles r ON u.role_id = r.id 
-            WHERE r.role_name = :role_name
-        ";
-        $stmt = $this->pdo->prepare($sql);
-        $stmt->execute([
-            ':role_name' => $roleName
-        ]);
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
-    }
+    
 }
 ?>

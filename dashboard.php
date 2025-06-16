@@ -7,7 +7,14 @@ if (!$auth->isLoggedIn()) {
 }
 
 $user = new User();
-$users = $user->getAllUsers();
+$currentUser = $auth->getUser();
+
+if ($auth->isAdmin()) {
+    $users = $user->getAllUsers();
+} else {
+    $users = [$user->getUserById($currentUser['id'])];
+}
+
 ?>
 
 <?php 
