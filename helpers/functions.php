@@ -25,5 +25,4 @@ function getFlash(): ?array {
     }
     return null;
 }
-
 ?>
