@@ -15,10 +15,15 @@
     <header>
         <nav>
             <ul>
-                <li><a href="dashboard.php">Home</a></li>
-                <li><a href="logout.php">Uitloggen</a></li>
-                <li><a href="register.php">Registreren</a></li>
-                <li><a href="account.php">Mijn account</a></li>
+                <?php if ($auth->isLoggedIn()): ?>
+                    <li><a href="dashboard.php">Dashboard</a></li>
+                    <li><a href="account.php">Mijn Account</a></li>
+                    <li><a href="producten.php">Producten</a></li>
+                    <li><a href="logout.php">Uitloggen</a></li>
+                <?php else: ?>
+                    <li><a href="login.php">Inloggen</a></li>
+                    <li><a href="register.php">Registreren</a></li>
+                <?php endif; ?>
             </ul>
         </nav>
     </header>
