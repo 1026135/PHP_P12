@@ -9,6 +9,7 @@ class Auth extends Database
         parent::__construct();
     }
     
+    // Login methods //
     public function login($email, $password)
     {
         $sql = "
@@ -43,13 +44,8 @@ class Auth extends Database
         return true;
     }
 
-    public function isLoggedIn()
-    {
-        return isset($_SESSION['user']);
-    }
 
-
-
+    // Get info methods//
     function getUser() 
     {
         if (!$this->isLoggedIn()) {
@@ -76,6 +72,13 @@ class Auth extends Database
         }
 
         return $_SESSION['user'];
+    }
+
+
+    // Check info methods //
+    public function isLoggedIn()
+    {
+        return isset($_SESSION['user']);
     }
 
     public function isAdmin()
