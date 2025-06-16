@@ -36,22 +36,22 @@ class Auth extends Database
         return false;
     }
 
+    public function logout()
+    {
+        unset($_SESSION['user']);
+        session_destroy();
+        return true;
+    }
 
     public function isLoggedIn()
     {
         return isset($_SESSION['user']);
     }
 
+
     public function getUser()
     {
         return $this->isLoggedIn() ? $_SESSION['user'] : null;
-    }
-
-    public function logout()
-    {
-        unset($_SESSION['user']);
-        session_destroy();
-        return true;
     }
 
     public function isAdmin()
