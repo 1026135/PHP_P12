@@ -1,6 +1,7 @@
 <?php
 require_once 'init.php';
 
+$auth = new Auth();
 $user = new User();
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
