@@ -19,7 +19,7 @@ if ($auth->isAdmin()) {
 
 <?php 
 $pageTitle = "Dashboard";
-include 'templates/header.php'; 
+include 'templates/header.php';
 ?>
 <h2>Dashboard</h2>
 <p>Welkom, <?= escapeHtml($auth->getUser()['name']) ?> | <a href="account.php">Mijn account</a> | <a href="logout.php">Uitloggen</a> </p>
