@@ -16,7 +16,7 @@ abstract class Database
             // error_log($error->getMessage()); // /xampp/apache/logs/error.log
             echo "Database connection failed: " . $error->getMessage(); // Vervang met error_log() voor actuele situatie
 
-            setFlash("Er is een technisch probleem. Probeer het later opnieuw.", "error"); // optioneel, als sessie beschikbaar is
+            setFlash("Er is een technisch probleem. Probeer het later opnieuw.", "error");
             redirect("Location: error.php"); // Maak error.php
         }
     }
