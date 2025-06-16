@@ -46,7 +46,7 @@ class Auth extends Database
     // Login methods //
 
 
-    // Get info methods//
+    // Get data methods//
     function getUser() 
     {
         if (!$this->isLoggedIn()) {
@@ -74,9 +74,9 @@ class Auth extends Database
 
         return $_SESSION['user'];
     }
-    // Get info methods//
+    // Get data methods//
 
-    // Check info methods //
+    // Check data methods //
     public function isLoggedIn()
     {
         return isset($_SESSION['user']);
@@ -86,6 +86,6 @@ class Auth extends Database
     {
         return $this->isLoggedIn() && $_SESSION['user']['role'] === 'admin';
     }
-    // Check info methods //
+    // Check data methods //
 }
 
