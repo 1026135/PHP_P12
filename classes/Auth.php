@@ -30,7 +30,6 @@ class Auth extends Database
                 'name'      => $user['name'],
                 'email'     => $user['email'],
                 'role'      => $user['role_name'],
-                'role_id'   => $user['role_id']
             ];
             return true;
         }
