@@ -48,18 +48,14 @@ class Auth extends Database
         return isset($_SESSION['user']);
     }
 
-/*
-    public function getUser()
-    {
-        return $this->isLoggedIn() ? $_SESSION['user'] : null;
-    }
-*/
+
+
     function getUser() 
     {
         if (!$this->isLoggedIn()) {
             return null;
         }
-        
+
         $sql = "
             SELECT u.id, u.name, u.email, r.role_name 
             FROM users u 
@@ -81,8 +77,6 @@ class Auth extends Database
 
         return $_SESSION['user'];
     }
-
-
 
     public function isAdmin()
     {
