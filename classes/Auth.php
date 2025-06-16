@@ -47,7 +47,7 @@ class Auth extends Database
 
 
     // Get data methods//
-    function getUser() 
+    public function getUser() 
     {
         if (!$this->isLoggedIn()) {
             return null;
