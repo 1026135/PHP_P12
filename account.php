@@ -3,7 +3,7 @@ require_once 'init.php';
 
 $auth = new Auth();
 if (!$auth->isLoggedIn()) {
-    header('Location: login.php');
+    redirect('login.php');
 }
 
 $user = new User();

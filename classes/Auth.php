@@ -48,11 +48,41 @@ class Auth extends Database
         return isset($_SESSION['user']);
     }
 
-
+/*
     public function getUser()
     {
         return $this->isLoggedIn() ? $_SESSION['user'] : null;
     }
+*/
+    function getUser() 
+    {
+        if (!$this->isLoggedIn()) {
+            return null;
+        }
+        
+        $sql = "
+            SELECT u.id, u.name, u.email, r.role_name 
+            FROM users u 
+            JOIN roles r ON u.role_id = r.id 
+            WHERE u.id = :id
+        ";
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute([':id' => $_SESSION['user']['id']]);
+        $user = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        if ($user) {
+            $_SESSION['user'] = [
+                'id'    => $user['id'],
+                'name'  => $user['name'],
+                'email' => $user['email'],
+                'role'  => $user['role_name'],
+            ];
+        }
+
+        return $_SESSION['user'];
+    }
+
+
 
     public function isAdmin()
     {
