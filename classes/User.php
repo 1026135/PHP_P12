@@ -9,6 +9,7 @@ class User extends Database
         parent::__construct();
     }
 
+    // Chabge dat methods //
     public function addUser($name, $email, $password, $role_id = 1)
     {
         $sql = "
@@ -41,6 +42,21 @@ class User extends Database
         ]);
     }
 
+    public function updatePassword($id, $newPassword)
+    {
+        $hashedPassword = password_hash($newPassword, PASSWORD_DEFAULT);
+        $sql = "
+            UPDATE users 
+            SET password = :password 
+            WHERE id = :id 
+        ";
+        $stmt = $this->pdo->prepare($sql);
+        return $stmt->execute([
+            ':password' => $hashedPassword, 
+            ':id' => $id
+        ]);
+    }
+
     public function deleteUser($id)
     {
         $sql = "
@@ -52,9 +68,10 @@ class User extends Database
             ':id' => $id
         ]);
     }
+    // Change data methods //
 
 
-
+    // Get data methods //
     public function getAllUsers()
     {
         $sql = "
@@ -109,22 +126,6 @@ class User extends Database
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
-    
-
-    public function emailExists($email)
-    {
-        $sql = "
-            SELECT COUNT(*) 
-            FROM users 
-            WHERE email = :email
-        ";
-        $stmt = $this->pdo->prepare($sql);
-        $stmt->execute([
-            ':email' => $email
-        ]);
-        return $stmt->fetchColumn() > 0;
-    }
-
     public function getPasswordHashByUserId($id)
     {
         $sql = "
@@ -138,20 +139,22 @@ class User extends Database
         ]);
         return $stmt->fetchColumn();
     }
-
-   public function updatePassword($id, $newPassword)
+    // Get data methods //
+    
+    // Check data methods //
+    public function emailExists($email)
     {
-        $hashedPassword = password_hash($newPassword, PASSWORD_DEFAULT);
         $sql = "
-            UPDATE users 
-            SET password = :password 
-            WHERE id = :id 
+            SELECT COUNT(*) 
+            FROM users 
+            WHERE email = :email
         ";
         $stmt = $this->pdo->prepare($sql);
-        return $stmt->execute([
-            ':password' => $hashedPassword, 
-            ':id' => $id
+        $stmt->execute([
+            ':email' => $email
         ]);
+        return $stmt->fetchColumn() > 0;
     }
+    // Check data methods //
 }
 ?>
