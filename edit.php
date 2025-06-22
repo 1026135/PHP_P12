@@ -52,7 +52,7 @@ include 'templates/header.php';
     </p>
     <p>
         <button type="submit">Opslaan</button>
-        <a href="dashboard.php">Annuleren</a>
+        <a href="<?= url('dashboard.php') ?>">Annuleren</a>
     </p>
 </form>
 <?php include 'templates/footer.php'; ?>

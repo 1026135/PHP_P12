@@ -27,7 +27,7 @@ $pageTitle = "View";
 include 'templates/header.php'; 
 ?>
 <h2>Gebruiker Details</h2>
-<p><a href="dashboard.php">Terug naar dashboard</a></p>
+<p><a href="<?= url('dashboard.php') ?>">Terug naar dashboard</a></p>
 
 <p><strong>Naam:</strong> <?= escapeHtml($userData['name']) ?></p>
 <p><strong>Email:</strong> <?= escapeHtml($userData['email']) ?></p>

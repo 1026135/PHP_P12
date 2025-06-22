@@ -15,7 +15,7 @@ class Product extends Database
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    public function getByUserId($user_id)
+    public function getProductByUserId($user_id)
     {
         $sql = "
             SELECT * 

@@ -1,15 +1,35 @@
 <?php
-function redirect($url) {
-    header("Location: $url");
-    exit;
+
+// URL Helpers //
+function redirect($url, $sendHeader = true) {
+    // If $url is not an absolute URL or root-relative, prepend BASE_URL
+    if (strpos($url, 'http') !== 0 && $url[0] !== '/') {
+        $url = BASE_URL . $url;
+    }
+
+    if ($sendHeader) {
+        header("Location: $url");
+        exit;
+    }
+
+    // Return the safe URL for use in HTML
+    return escapeHtml($url);
 }
 
+function url($path) {
+    return redirect($path, false);
+}
+// URL Helpers //
+
+
+// Security Helpers //
 function escapeHtml($string) {
     return htmlspecialchars($string, ENT_QUOTES, 'UTF-8');
 }
+// Security Helpers //
 
 
-
+// Notification & Debug Tools //
 function setFlash(string $message, string $type = 'success'): void {
     $_SESSION['flash'] = [
         'message' => $message,
@@ -33,4 +53,5 @@ function checkSessionInfo() {
     print_r($_SESSION['user']);
     echo '</pre>';
 }
+// Notification & Debug Tools //
 ?>
