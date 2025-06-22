@@ -17,7 +17,7 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST' || !isset($_POST['id'])) {
 $userData = new User();
 $id = (int)$_POST['id'];
 
-$user = $userDatar->getUserById($id);
+$user = $userData->getUserById($id);
 
 if (!$user) {
     setFlash("Gebruiker niet gevonden.", "error");
@@ -29,7 +29,7 @@ if ($user['id'] !== $currentUser['id'] && !$auth->isAdmin()) {
     redirect('dashboard.php');
 }
 
-if ($productData->deleteProduct($id)) {
+if ($userData->deleteUser($id)) {
     setFlash("Gebruiker succesvol verwijderd.", "success");
 } else {
     setFlash("Fout bij verwijderen van Gebruiker.", "error");

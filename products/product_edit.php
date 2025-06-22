@@ -81,6 +81,7 @@ include ROOT_PATH . '/templates/header.php';
         <button type="submit">Opslaan</button>
         <a href="<?= url('products/products.php') ?>">Annuleren</a>
     </p>
+    
 </form>
 
 <?php include ROOT_PATH . '/templates/footer.php'; ?>
