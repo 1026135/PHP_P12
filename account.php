@@ -23,7 +23,7 @@ if ($user['id'] !== $currentUser['id'] && !$auth->isAdmin()) {
     redirect('dashboard.php');
 }
 
-// Profiel updaten
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $id = (int)($_POST['id'] ?? 0);
     $name = trim($_POST['name'] ?? '');
@@ -48,9 +48,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 
+
 $passwordHash = $userData->getPasswordHashByUserId($currentUser['id']);
 
-// Wachtwoord wijzigen
 if (isset($_POST['change_password'])) {
     $currentPassword = $_POST['current_password'] ?? '';
     $newPassword = $_POST['new_password'] ?? '';

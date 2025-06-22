@@ -42,7 +42,6 @@ if ($currentUser['id'] === $id && $newRole !== 'admin') {
     redirect('dashboard.php');
 }
 
-// Directly pass the role name string to updateUserRole
 if ($userData->updateUserRole($id, $newRole)) {
     setFlash("Rol succesvol bijgewerkt.", "success");
 } else {

@@ -35,6 +35,7 @@ class User extends Database
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
+    // Never used?
     public function getUsersByRole($roleName)
     {
         $sql = "
@@ -90,10 +91,10 @@ class User extends Database
         $stmt = $this->pdo->prepare($sql);
         $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
         $stmt->execute([
-            ':name' => $name,
-            ':email' => strtolower(trim($email)),
+            ':name'     => $name,
+            ':email'    => strtolower(trim($email)),
             ':password' => $hashedPassword,
-            ':role_id' => $role_id
+            ':role_id'  => $role_id
         ]);
     return $this->pdo->lastInsertId();
     }
@@ -107,9 +108,9 @@ class User extends Database
         ";
         $stmt = $this->pdo->prepare($sql);
         return $stmt->execute([
-            ':name' => $name,
-            ':email' => $email,
-            ':id' => $id
+            ':name'     => $name,
+            ':email'    => $email,
+            ':id'       => $id
         ]);
     }
 
@@ -124,7 +125,7 @@ class User extends Database
         $stmt = $this->pdo->prepare($sql);
         return $stmt->execute([
             ':password' => $hashedPassword, 
-            ':id' => $id
+            ':id'       => $id
         ]);
     }
 

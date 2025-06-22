@@ -23,7 +23,9 @@ class Product extends Database
             WHERE user_id = :user_id
         ";
         $stmt = $this->pdo->prepare($sql);
-        $stmt->execute(['user_id' => $user_id]);
+        $stmt->execute([
+            'user_id' => $user_id
+        ]);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
@@ -35,7 +37,9 @@ class Product extends Database
             WHERE id = :id
         ";
         $stmt = $this->pdo->prepare($sql);
-        $stmt->execute(['id' => $id]);
+        $stmt->execute([
+            'id' => $id
+        ]);
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
     // Get data methods //
@@ -85,7 +89,9 @@ class Product extends Database
             WHERE id = :id
         ";
         $stmt = $this->pdo->prepare($sql);
-        return $stmt->execute(['id' => $id]);
+        return $stmt->execute([
+            'id' => $id
+        ]);
     }
     // Change data methods //
 }

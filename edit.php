@@ -43,7 +43,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         } else {
             if ($userData->updateUser($id, $name, $email)) {
                 setFlash("Gebruiker succesvol bijgewerkt.", "success");
-                redirect('dashboard.php'); // or your preferred redirect
+                redirect('dashboard.php');
             } else {
                 setFlash("Er is een fout opgetreden bij het bijwerken.", "error");
             }
