@@ -28,7 +28,7 @@ include 'templates/header.php';
     <a href="<?= url('logout.php') ?>">Logout</a>
 </p>
 
-<a href="<?= url('product_add.php') ?>">➕ Add Product</a>
+<a href="<?= url('products/product_add.php') ?>">➕ Add Product</a>
 
 <table border="1" cellpadding="8" cellspacing="0">
     <tr>
@@ -47,9 +47,9 @@ include 'templates/header.php';
                 <td><?= escapeHtml($product['created_at']) ?></td>
 
                 <td style="text-align: center; white-space: nowrap;">
-                    <a href="<?= url('product_view.php?id=' . $product['id']) ?>">View</a> |
-                    <a href="<?= url('product_edit.php?id=' . $product['id']) ?>">Edit</a> |
-                    <form action="product_delete.php" method="post" style="display:inline;" onsubmit="return confirm('Are you sure you want to delete this product?');">
+                    <a href="<?= url('products/product_view.php?id=' . $product['id']) ?>">View</a> |
+                    <a href="<?= url('products/product_edit.php?id=' . $product['id']) ?>">Edit</a> |
+                    <form action="products/product_delete.php" method="post" style="display:inline;" onsubmit="return confirm('Are you sure you want to delete this product?');">
                         <input type="hidden" name="id" value="<?= $product['id'] ?>">
                         <button type="submit" style="background:none; border:none; color:blue; cursor:pointer; padding:0; font:inherit;">Delete</button>
                     </form>
