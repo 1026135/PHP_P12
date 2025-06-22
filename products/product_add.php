@@ -7,6 +7,7 @@ if (!$auth->isLoggedIn()) {
     redirect('login.php');
 }
 
+$currentUser = $auth->getUser();
 $product = new Product();
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -25,7 +26,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if ($product->addProduct([
             'name' => $name,
             'description' => $description,
-            'price' => $price
+            'price' => $price,
+            'user_id' => $currentUser['id']
         ])) {
             setFlash("Product succesvol toegevoegd.", "success");
             redirect('products/products.php');
