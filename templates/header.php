@@ -18,7 +18,7 @@
                 <?php if ($auth->isLoggedIn()): ?>
                     <li><a href="dashboard.php">Dashboard</a></li>
                     <li><a href="account.php">Mijn Account</a></li>
-                    <li><a href="products.php">Producten</a></li>
+                    <li><a href="/products/products.php">Producten</a></li>
                     <li><a href="logout.php">Uitloggen</a></li>
                 <?php else: ?>
                     <li><a href="login.php">Inloggen</a></li>
