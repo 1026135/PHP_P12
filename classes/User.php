@@ -9,68 +9,7 @@ class User extends Database
         parent::__construct();
     }
 
-    // Chabge dat methods //
-    public function addUser($name, $email, $password, $role_id = 1)
-    {
-        $sql = "
-            INSERT INTO users (name, email, password, role_id) 
-            VALUES (:name, :email, :password, :role_id)
-        ";
-        $stmt = $this->pdo->prepare($sql);
-        $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
-        $stmt->execute([
-            ':name' => $name,
-            ':email' => strtolower(trim($email)),
-            ':password' => $hashedPassword,
-            ':role_id' => $role_id
-        ]);
-    return $this->pdo->lastInsertId();
-    }
-
-    public function updateUser($id, $name, $email)
-    {
-        $sql = "
-            UPDATE users 
-            SET name = :name, email = :email 
-            WHERE id = :id
-        ";
-        $stmt = $this->pdo->prepare($sql);
-        return $stmt->execute([
-            ':name' => $name,
-            ':email' => $email,
-            ':id' => $id
-        ]);
-    }
-
-    public function updatePassword($id, $newPassword)
-    {
-        $hashedPassword = password_hash($newPassword, PASSWORD_DEFAULT);
-        $sql = "
-            UPDATE users 
-            SET password = :password 
-            WHERE id = :id 
-        ";
-        $stmt = $this->pdo->prepare($sql);
-        return $stmt->execute([
-            ':password' => $hashedPassword, 
-            ':id' => $id
-        ]);
-    }
-
-    public function deleteUser($id)
-    {
-        $sql = "
-            DELETE FROM users 
-            WHERE id = :id
-        ";
-        $stmt = $this->pdo->prepare($sql);
-        return $stmt->execute([
-            ':id' => $id
-        ]);
-    }
-    // Change data methods //
-
-
+    
     // Get data methods //
     public function getAllUsers()
     {
@@ -140,6 +79,67 @@ class User extends Database
         return $stmt->fetchColumn();
     }
     // Get data methods //
+
+    // Change data methods //
+    public function addUser($name, $email, $password, $role_id = 1)
+    {
+        $sql = "
+            INSERT INTO users (name, email, password, role_id) 
+            VALUES (:name, :email, :password, :role_id)
+        ";
+        $stmt = $this->pdo->prepare($sql);
+        $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
+        $stmt->execute([
+            ':name' => $name,
+            ':email' => strtolower(trim($email)),
+            ':password' => $hashedPassword,
+            ':role_id' => $role_id
+        ]);
+    return $this->pdo->lastInsertId();
+    }
+
+    public function updateUser($id, $name, $email)
+    {
+        $sql = "
+            UPDATE users 
+            SET name = :name, email = :email 
+            WHERE id = :id
+        ";
+        $stmt = $this->pdo->prepare($sql);
+        return $stmt->execute([
+            ':name' => $name,
+            ':email' => $email,
+            ':id' => $id
+        ]);
+    }
+
+    public function updatePassword($id, $newPassword)
+    {
+        $hashedPassword = password_hash($newPassword, PASSWORD_DEFAULT);
+        $sql = "
+            UPDATE users 
+            SET password = :password 
+            WHERE id = :id 
+        ";
+        $stmt = $this->pdo->prepare($sql);
+        return $stmt->execute([
+            ':password' => $hashedPassword, 
+            ':id' => $id
+        ]);
+    }
+
+    public function deleteUser($id)
+    {
+        $sql = "
+            DELETE FROM users 
+            WHERE id = :id
+        ";
+        $stmt = $this->pdo->prepare($sql);
+        return $stmt->execute([
+            ':id' => $id
+        ]);
+    }
+    // Change data methods //
     
     // Check data methods //
     public function emailExists($email)
