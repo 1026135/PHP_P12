@@ -35,7 +35,7 @@ if (!$userData) {
 
 <?php 
 $pageTitle = "Edit";
-include 'templates/header.php'; 
+include ROOT_PATH . 'templates/header.php'; 
 ?>
 <h2>Gebruiker Bewerken</h2>
 <form action="edit.php?id=<?= $userData['id'] ?>" method="post">
@@ -55,4 +55,4 @@ include 'templates/header.php';
         <a href="<?= url('dashboard.php') ?>">Annuleren</a>
     </p>
 </form>
-<?php include 'templates/footer.php'; ?>
+<?php include ROOT_PATH . 'templates/footer.php'; ?>

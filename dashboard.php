@@ -19,7 +19,7 @@ if ($auth->isAdmin()) {
 
 <?php 
 $pageTitle = "Dashboard";
-include 'templates/header.php';
+include ROOT_PATH . 'templates/header.php';
 ?>
 <h2>Dashboard</h2>
 <p>Welkom, <?= escapeHtml($auth->getUser()['name']) ?> | <a href="<?= url('account.php') ?>">Mijn account</a> | <a href="<?= url('logout.php') ?>">Uitloggen</a></p>
@@ -56,4 +56,4 @@ include 'templates/header.php';
     <?php endif; ?>
 </table>
 
-<?php include 'templates/footer.php'; ?>
+<?php include ROOT_PATH . 'templates/footer.php'; ?>

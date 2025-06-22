@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title><?php echo isset($pageTitle) ? escapeHtml($pageTitle) : 'My Website'; ?></title>
-    <link rel="stylesheet" href="<?= url('path/to/your/styles.css') ?>" />
+    <link rel="stylesheet" href="<?= url('#') ?>" />
 </head>
 <body>
     <?php if ($flash = getFlash()): ?>

@@ -18,7 +18,7 @@ if ($auth->isAdmin()) {
 
 <?php 
 $pageTitle = "Products";
-include 'templates/header.php';
+include ROOT_PATH . 'templates/header.php';
 ?>
 
 <h2>Products</h2>
@@ -61,4 +61,4 @@ include 'templates/header.php';
     <?php endif; ?>
 </table>
 
-<?php include 'templates/footer.php'; ?>
+<?php include ROOT_PATH . 'templates/footer.php'; ?>

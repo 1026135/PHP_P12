@@ -71,7 +71,7 @@ if (isset($_POST['change_password'])) {
 
 <?php 
 $pageTitle = "Mijn Account";
-include 'templates/header.php'; 
+include ROOT_PATH . 'templates/header.php';
 ?>
 <h2>Mijn Account</h2>
 
@@ -118,4 +118,4 @@ include 'templates/header.php';
     </p>
 </form>
 
-<?php include 'templates/footer.php'; ?>
+<?php include ROOT_PATH . 'templates/footer.php'; ?>

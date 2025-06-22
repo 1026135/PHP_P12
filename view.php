@@ -24,7 +24,7 @@ if (!$userData) {
 
 <?php 
 $pageTitle = "View";
-include 'templates/header.php'; 
+include ROOT_PATH . 'templates/header.php'; 
 ?>
 <h2>Gebruiker Details</h2>
 <p><a href="<?= url('dashboard.php') ?>">Terug naar dashboard</a></p>
@@ -32,4 +32,4 @@ include 'templates/header.php';
 <p><strong>Naam:</strong> <?= escapeHtml($userData['name']) ?></p>
 <p><strong>Email:</strong> <?= escapeHtml($userData['email']) ?></p>
 
-<?php include 'templates/footer.php'; ?>
+<?php include ROOT_PATH . 'templates/footer.php'; ?>

@@ -16,8 +16,8 @@ function redirect($url, $sendHeader = true) {
     return escapeHtml($url);
 }
 
-function url($path) {
-    return redirect($path, false);
+function url($url) {
+    return redirect($url, false);
 }
 // URL Helpers //
 

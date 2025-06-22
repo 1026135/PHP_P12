@@ -19,7 +19,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 <?php 
 $pageTitle = "Login";
-include 'templates/header.php'; 
+include ROOT_PATH . 'templates/header.php'; 
 ?>
 <h2>Login</h2>
 <?php if (isset($error)) echo "<p style='color:red;'>$error</p>"; ?>
@@ -30,4 +30,4 @@ include 'templates/header.php';
     <input type="password" name="password" required><br>
     <button type="submit">Inloggen</button>
 </form>
-<?php include 'templates/footer.php'; ?>
+<?php include ROOT_PATH . 'templates/footer.php'; ?>
