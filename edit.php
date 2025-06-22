@@ -38,7 +38,7 @@ $pageTitle = "Edit";
 include ROOT_PATH . 'templates/header.php'; 
 ?>
 <h2>Gebruiker Bewerken</h2>
-<form action="edit.php?id=<?= $userData['id'] ?>" method="post">
+<form action="<?= url('edit.php?id=' . $userData['id']) ?>" method="post">
     <input type="hidden" name="id" value="<?= $userData['id'] ?>">
     <p>
         <label>Naam:<br>

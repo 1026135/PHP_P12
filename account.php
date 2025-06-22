@@ -3,6 +3,7 @@ require_once 'init.php';
 
 $auth = new Auth();
 if (!$auth->isLoggedIn()) {
+    setFlash("Je moet ingelogd zijn om deze pagina te bekijken.", "error");
     redirect('login.php');
 }
 

@@ -3,7 +3,7 @@
 // URL Helpers //
 function redirect($url, $sendHeader = true) {
     // If $url is not an absolute URL or root-relative, prepend BASE_URL
-    if (strpos($url, 'http') !== 0 && $url[0] !== '/') {
+    if ($url === '' || (strpos($url, 'http') !== 0 && $url[0] !== '/')) {
         $url = BASE_URL . $url;
     }
 

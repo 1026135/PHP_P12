@@ -1,63 +1,66 @@
 <?php
-require_once '../init.php';
+require_once __DIR__ . '/../init.php';
 
 $auth = new Auth();
+
 if (!$auth->isLoggedIn()) {
+    setFlash("Je moet ingelogd zijn om deze pagina te bekijken.", "error");
     redirect('login.php');
 }
 
 $currentUser = $auth->getUser();
-$product = new Product();
+$productData = new Product();
 
 if ($auth->isAdmin()) {
-    $products = $product->getAllProducts();
+    $products = $productData->getAllProducts();
 } else {
+    setFlash("Je moet een admin zijn om deze pagina te bekijken.", "error");
     redirect('dashboard.php');
 }
 ?>
 
 <?php 
-$pageTitle = "Products";
+$pageTitle = "Producten";
 include ROOT_PATH . 'templates/header.php';
 ?>
 
-<h2>Products</h2>
+<h2>Producten</h2>
 <p>
-    Welcome, <?= escapeHtml($currentUser['name']) ?> |
+    Welkom, <?= escapeHtml($currentUser['name']) ?> |
     <a href="<?= url('dashboard.php') ?>">Dashboard</a> |
-    <a href="<?= url('logout.php') ?>">Logout</a>
+    <a href="<?= url('logout.php') ?>">Uitloggen</a>
 </p>
 
-<a href="<?= url('products/product_add.php') ?>">➕ Add Product</a>
+<a href="<?= url('products/product_add.php') ?>">➕ Product toevoegen</a>
 
 <table border="1" cellpadding="8" cellspacing="0">
     <tr>
-        <th>Name</th>
-        <th>Description</th>
-        <th>Price</th>
-        <th>Created At</th>
-        <th style="text-align: center;">Actions</th>
+        <th>Naam</th>
+        <th>Beschrijving</th>
+        <th>Prijs</th>
+        <th>Aangemaakt op</th>
+        <th style="text-align: center;">Acties</th>
     </tr>
-    <?php if (!empty($products)):?> 
-        <?php foreach ($products as $product): ?>
+    <?php if (!empty($products)): ?> 
+        <?php foreach ($products as $item): ?>
             <tr>
-                <td><?= escapeHtml($product['name']) ?></td>
-                <td><?= escapeHtml($product['description']) ?></td>
-                <td>€<?= number_format($product['price'], 2) ?></td>
-                <td><?= escapeHtml($product['created_at']) ?></td>
+                <td><?= escapeHtml($item['name']) ?></td>
+                <td><?= escapeHtml($item['description']) ?></td>
+                <td>€<?= number_format((float)$item['price'], 2, ',', '.') ?></td>
+                <td><?= escapeHtml($item['created_at']) ?></td>
 
                 <td style="text-align: center; white-space: nowrap;">
-                    <a href="<?= url('products/product_view.php?id=' . $product['id']) ?>">View</a> |
-                    <a href="<?= url('products/product_edit.php?id=' . $product['id']) ?>">Edit</a> |
-                    <form action="products/product_delete.php" method="post" style="display:inline;" onsubmit="return confirm('Are you sure you want to delete this product?');">
-                        <input type="hidden" name="id" value="<?= $product['id'] ?>">
-                        <button type="submit" style="background:none; border:none; color:blue; cursor:pointer; padding:0; font:inherit;">Delete</button>
+                    <a href="<?= url('products/product_view.php?id=' . $item['id']) ?>">Bekijken</a> |
+                    <a href="<?= url('products/product_edit.php?id=' . $item['id']) ?>">Bewerken</a> |
+                    <form action="<?= url('products/product_delete.php') ?>" method="post" style="display:inline;" onsubmit="return confirm('Weet je het zeker?');">
+                        <input type="hidden" name="id" value="<?= $item['id'] ?>">
+                        <button type="submit" style="background:none; border:none; color:blue; cursor:pointer; padding:0; font:inherit;">Verwijderen</button>
                     </form>
                 </td>
             </tr>
         <?php endforeach; ?>
     <?php else: ?>
-        <tr><td colspan="5">No products found.</td></tr>
+        <tr><td colspan="5">Geen producten gevonden.</td></tr>
     <?php endif; ?>
 </table>
 
