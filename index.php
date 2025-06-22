@@ -7,8 +7,6 @@ if ($auth->isLoggedIn()) {
     setFlash("Je bent al ingelogd.", "info");
     redirect('dashboard.php');
 } else {
-    //redirect('login.php');
-    header("Location: login.php");
-    exit;
+    redirect('login.php');
 }
 ?>

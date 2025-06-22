@@ -54,4 +54,4 @@ include ROOT_PATH . '/templates/header.php';
     <button type="submit">Toevoegen</button>
 </form>
 
-<?php include BASE_PATH . '/templates/footer.php'; ?>
+<?php include ROOT_PATH . '/templates/footer.php'; ?>
