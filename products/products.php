@@ -24,7 +24,7 @@ $pageTitle = "Producten";
 include ROOT_PATH . 'templates/header.php';
 ?>
 
-<h2>Producten</h2>
+<h2><?= escapeHtml($pageTitle) ?></h2>
 <p>
     Welkom, <?= escapeHtml($currentUser['name']) ?> |
     <a href="<?= url('dashboard.php') ?>">Dashboard</a> |

@@ -48,10 +48,23 @@ function getFlash(): ?array {
 
 
 // For troubleshooting
-function checkSessionInfo() {
+function checkSessionInfo(string $key = null) {
     echo '<pre>';
-    print_r($_SESSION['user']);
+    if ($key !== null) {
+        if (isset($_SESSION[$key])) {
+            print_r($_SESSION[$key]);
+        } else {
+            echo "No session data found for key: {$key}";
+        }
+    } else {
+        // No key specified, show entire session
+        print_r($_SESSION);
+    }
     echo '</pre>';
+}
+
+function checkAllSessionInfo() {
+    echo '<pre>' . print_r($_SESSION, true) . '</pre>';
 }
 // Notification & Debug Tools //
 ?>

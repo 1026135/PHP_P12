@@ -1,5 +1,5 @@
 <?php
-require_once 'init.php';
+require_once __DIR__ . '/init.php';
 
 $auth = new Auth();
 if (!$auth->isLoggedIn()) {
@@ -22,7 +22,7 @@ if ($auth->isAdmin()) {
 $pageTitle = "Dashboard";
 include ROOT_PATH . 'templates/header.php';
 ?>
-<h2>Dashboard</h2>
+<h2><?= escapeHtml($pageTitle) ?></h2>
 <p>
     Welkom, <?= escapeHtml($auth->getUser()['name']) ?> | 
     <a href="<?= url('account.php') ?>">Mijn account</a> | 

@@ -1,5 +1,5 @@
 <?php
-require_once 'init.php';
+require_once __DIR__ . '/init.php';
 
 $auth = new Auth();
 if (!$auth->isLoggedIn()) {
@@ -74,7 +74,7 @@ if (isset($_POST['change_password'])) {
 $pageTitle = "Mijn Account";
 include ROOT_PATH . 'templates/header.php';
 ?>
-<h2>Mijn Account</h2>
+<h2><?= escapeHtml($pageTitle) ?></h2>
 
 <h3>Profiel bewerken</h3>
 <form method="post">

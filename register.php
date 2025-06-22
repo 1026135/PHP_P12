@@ -1,5 +1,5 @@
 <?php
-require_once 'init.php';
+require_once __DIR__ . '/init.php';
 
 $auth = new Auth();
 $user = new User();
@@ -21,10 +21,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 ?>
 
 <?php 
-$pageTitle = "Register";
+$pageTitle = "Registreren";
 include ROOT_PATH . 'templates/header.php'; 
 ?>
-<h2>Registreren</h2>
+<h2><?= escapeHtml($pageTitle) ?></h2>
 <?php if (isset($error)) echo "<p style='color:red;'>$error</p>"; ?>
 <form method="post">
     <label>Naam:</label><br>

@@ -32,7 +32,7 @@ $pageTitle = "Product Details";
 include BASE_PATH . '/templates/header.php';
 ?>
 
-<h2>Product Details</h2>
+<h2><?= escapeHtml($pageTitle) ?></h2>
 
 <p><a href="<?= url('products/products.php') ?>">← Terug naar producten</a></p>
 

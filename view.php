@@ -1,5 +1,5 @@
 <?php
-require_once 'init.php';
+require_once __DIR__ . '/init.php';
 
 $auth = new Auth();
 if (!$auth->isLoggedIn()) {
@@ -23,10 +23,10 @@ if (!$userData) {
 
 
 <?php 
-$pageTitle = "View";
+$pageTitle = "Gebruiker Details";
 include ROOT_PATH . 'templates/header.php'; 
 ?>
-<h2>Gebruiker Details</h2>
+<h2><?= escapeHtml($pageTitle) ?></h2>
 <p><a href="<?= url('dashboard.php') ?>">Terug naar dashboard</a></p>
 
 <p><strong>Naam:</strong> <?= escapeHtml($userData['name']) ?></p>

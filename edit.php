@@ -1,5 +1,5 @@
 <?php
-require_once 'init.php';
+require_once __DIR__ . '/init.php';
 
 $auth = new Auth();
 if (!$auth->isLoggedIn()) {
@@ -34,10 +34,10 @@ if (!$userData) {
 ?>
 
 <?php 
-$pageTitle = "Edit";
+$pageTitle = "Gebruiker Bewerken";
 include ROOT_PATH . 'templates/header.php'; 
 ?>
-<h2>Gebruiker Bewerken</h2>
+<h2><?= escapeHtml($pageTitle) ?></h2>
 <form action="<?= url('edit.php?id=' . $userData['id']) ?>" method="post">
     <input type="hidden" name="id" value="<?= $userData['id'] ?>">
     <p>
