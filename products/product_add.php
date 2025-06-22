@@ -7,11 +7,6 @@ if (!$auth->isLoggedIn()) {
     redirect('login.php');
 }
 
-if (!$auth->isAdmin()) {
-    setFlash("Je moet een admin zijn om deze actie uit te voeren.", "error");
-    redirect('products/products.php');
-}
-
 $product = new Product();
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -41,7 +36,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 
 $pageTitle = "Product Toevoegen";
-include BASE_PATH . '/templates/header.php';
+include ROOT_PATH . '/templates/header.php';
 ?>
 
 <h2><?= escapeHtml($pageTitle) ?></h2>

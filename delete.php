@@ -7,6 +7,8 @@ if (!$auth->isLoggedIn()) {
     redirect('login.php');
 }
 
+$currentUser = $auth->getUser();
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['id'])) {
     $user = new User();
     $id = (int)$_POST['id'];

@@ -14,8 +14,7 @@ $productData = new Product();
 if ($auth->isAdmin()) {
     $products = $productData->getAllProducts();
 } else {
-    setFlash("Je moet een admin zijn om deze pagina te bekijken.", "error");
-    redirect('dashboard.php');
+    $products = $productData->getProductByUserId($currentUser['id']);
 }
 ?>
 
@@ -47,13 +46,12 @@ include ROOT_PATH . 'templates/header.php';
                 <td><?= escapeHtml($item['name']) ?></td>
                 <td><?= escapeHtml($item['description']) ?></td>
                 <td>€<?= number_format((float)$item['price'], 2, ',', '.') ?></td>
-                <td><?= escapeHtml($item['created_at']) ?></td>
-
+                <td><?= date('d-m-Y H:i', strtotime($item['created_at'])) ?></td>
                 <td style="text-align: center; white-space: nowrap;">
-                    <a href="<?= url('products/product_view.php?id=' . $item['id']) ?>">Bekijken</a> |
+                    <a href="<?= url('products/product_view.php?id=' . (int)$item['id']) ?>">Bekijken</a> |
                     <a href="<?= url('products/product_edit.php?id=' . $item['id']) ?>">Bewerken</a> |
                     <form action="<?= url('products/product_delete.php') ?>" method="post" style="display:inline;" onsubmit="return confirm('Weet je het zeker?');">
-                        <input type="hidden" name="id" value="<?= $item['id'] ?>">
+                        <input type="hidden" name="id" value="<?= (int)$item['id'] ?>">
                         <button type="submit" style="background:none; border:none; color:blue; cursor:pointer; padding:0; font:inherit;">Verwijderen</button>
                     </form>
                 </td>

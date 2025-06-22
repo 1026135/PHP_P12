@@ -8,11 +8,6 @@ if (!$auth->isLoggedIn()) {
     redirect('login.php');
 }
 
-if (!$auth->isAdmin()) {
-    setFlash("Je moet een admin zijn om deze pagina te bekijken.", "error");
-    redirect('dashboard.php');
-}
-
 if (!isset($_GET['id']) || !is_numeric($_GET['id'])) {
     setFlash("Geen geldig product geselecteerd.", "error");
     redirect('products/products.php');
@@ -29,7 +24,7 @@ if (!$product) {
 
 <?php 
 $pageTitle = "Product Details";
-include BASE_PATH . '/templates/header.php';
+include ROOT_PATH . '/templates/header.php';
 ?>
 
 <h2><?= escapeHtml($pageTitle) ?></h2>
@@ -41,4 +36,4 @@ include BASE_PATH . '/templates/header.php';
 <p><strong>Prijs:</strong> €<?= number_format((float)$product['price'], 2, ',', '.') ?></p>
 <p><strong>Aangemaakt op:</strong> <?= escapeHtml($product['created_at']) ?></p>
 
-<?php include BASE_PATH . '/templates/footer.php'; ?>
+<?php include ROOT_PATH . '/templates/footer.php'; ?>

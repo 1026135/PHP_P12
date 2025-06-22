@@ -7,25 +7,32 @@ if (!$auth->isLoggedIn()) {
     redirect('login.php');
 }
 
-if (!$auth->isAdmin()) {
-    setFlash("Je moet een admin zijn om deze actie uit te voeren.", "error");
+$currentUser = $auth->getUser();
+
+if ($_SERVER['REQUEST_METHOD'] !== 'POST' || !isset($_POST['id'])) {
+    setFlash("Ongeldige aanvraag.", "error");
     redirect('products/products.php');
 }
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['id'])) {
-    $product = new Product();
-    $id = (int)$_POST['id'];
+$productData = new Product();
+$id = (int)$_POST['id'];
 
-    // (optioneel) controleer of product bestaat
-    if ($product->getProductById($id)) {
-        $product->deleteProduct($id);
-        setFlash("Product succesvol verwijderd.", "success");
-    } else {
-        setFlash("Product niet gevonden.", "error");
-    }
+$product = $productData->getProductById($id);
+
+if (!$product) {
+    setFlash("Product niet gevonden.", "error");
+    redirect('products/products.php');
+}
+
+if ($product['user_id'] !== $currentUser['id'] && !$auth->isAdmin()) {
+    setFlash("Je hebt geen rechten om deze actie uit te voeren.", "error");
+    redirect('products/products.php');
+}
+
+if ($productData->deleteProduct($id)) {
+    setFlash("Product succesvol verwijderd.", "success");
 } else {
-    setFlash("Ongeldige aanvraag.", "error");
+    setFlash("Fout bij verwijderen van product.", "error");
 }
 
 redirect('products/products.php');
-?>

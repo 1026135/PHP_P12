@@ -7,17 +7,25 @@ if (!$auth->isLoggedIn()) {
     redirect('login.php');
 }
 
-if (!$auth->isAdmin()) {
-    setFlash("Je moet een admin zijn om dit te bekijken.", "error");
-    redirect('products/products.php');
-}
-
 if (!isset($_GET['id']) || !is_numeric($_GET['id'])) {
     setFlash("Geen product gespecificeerd.", "error");
     redirect('products/products.php');
 }
 
 $productData = new Product();
+$product = $productData->getProductById((int)$_GET['id']);
+
+if (!$product) {
+    setFlash("Product niet gevonden.", "error");
+    redirect('products/products.php');
+}
+
+$currentUser = $auth->getUser();
+
+if ($product['user_id'] !== $currentUser['id'] && !$auth->isAdmin()) {
+    setFlash("Je hebt geen rechten om deze actie uit te voeren.", "error");
+    redirect('products/products.php');
+}
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $id = (int)($_POST['id'] ?? 0);
@@ -42,17 +50,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 
-$product = $productData->getProductById((int)$_GET['id']);
-
-if (!$product) {
-    setFlash("Product niet gevonden.", "error");
-    redirect('products/products.php');
-}
-?>
-
-<?php 
 $pageTitle = "Product Bewerken";
-include BASE_PATH . '/templates/header.php';
+include ROOT_PATH . '/templates/header.php';
 ?>
 
 <h2><?= escapeHtml($pageTitle) ?></h2>
@@ -84,4 +83,4 @@ include BASE_PATH . '/templates/header.php';
     </p>
 </form>
 
-<?php include BASE_PATH . '/templates/footer.php'; ?>
+<?php include ROOT_PATH . '/templates/footer.php'; ?>
