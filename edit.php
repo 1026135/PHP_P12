@@ -2,6 +2,7 @@
 require_once __DIR__ . '/init.php';
 
 $auth = new Auth();
+
 if (!$auth->isLoggedIn()) {
     setFlash("Je moet ingelogd zijn om dit te bekijken.", "error");
     redirect('login.php');
@@ -29,14 +30,21 @@ if ($user['id'] !== $currentUser['id'] && !$auth->isAdmin()) {
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $id = (int)$_POST['id'];
-    $name = trim($_POST['name']);
-    $email = trim($_POST['email']);
+    $name = trim($_POST['name'] ?? '');
+    $email = trim($_POST['email'] ?? '');
 
-    // (Optioneel) validatie hier toevoegen
-
-    $user->updateUser($id, $name, $email);
-    setFlash("Gebruiker succesvol bijgewerkt.", "success");
-    redirect('dashboard.php');
+    if ($name === '') {
+        setFlash("Naam is verplicht.", "error");
+    } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        setFlash("Ongeldig e-mailadres.", "error");
+    } else {
+        if ($userData->updateUser($id, $name, $email)) {
+            setFlash("Gebruiker succesvol bijgewerkt.", "success");
+            redirect('dashboard.php');
+        } else {
+            setFlash("Er is een fout opgetreden bij het bijwerken.", "error");
+        }
+    }
 }
 ?>
 
@@ -44,19 +52,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 $pageTitle = "Gebruiker Bewerken";
 include ROOT_PATH . 'templates/header.php'; 
 ?>
+
 <h2><?= escapeHtml($pageTitle) ?></h2>
-<form action="<?= url('edit.php?id=' . $userData['id']) ?>" method="post">
-    <input type="hidden" name="id" value="<?= $userData['id'] ?>">
+
+<form action="<?= url('edit.php?id=' . $user['id']) ?>" method="post">
+    <input type="hidden" name="id" value="<?= $user['id'] ?>">
 
     <p>
         <label>Naam:<br>
-            <input type="text" name="name" value="<?= escapeHtml($userData['name']) ?>" required>
+            <input type="text" name="name" value="<?= escapeHtml($_POST['name'] ?? $user['name']) ?>" required>
         </label>
     </p>
 
     <p>
         <label>Email:<br>
-            <input type="email" name="email" value="<?= escapeHtml($userData['email']) ?>" required>
+            <input type="email" name="email" value="<?= escapeHtml($_POST['email'] ?? $user['email']) ?>" required>
         </label>
     </p>
 
@@ -64,7 +74,6 @@ include ROOT_PATH . 'templates/header.php';
         <button type="submit">Opslaan</button>
         <a href="<?= url('dashboard.php') ?>">Annuleren</a>
     </p>
-    
 </form>
 
 <?php include ROOT_PATH . 'templates/footer.php'; ?>
