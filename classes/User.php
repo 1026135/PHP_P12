@@ -128,6 +128,23 @@ class User extends Database
         ]);
     }
 
+    public function updateUserRole(int $userId, string $roleName): bool
+    {
+        $sql = "
+            UPDATE users u
+            JOIN roles r ON r.role_name = :role_name
+            SET u.role_id = r.id
+            WHERE u.id = :user_id
+        ";
+    
+        $stmt = $this->pdo->prepare($sql);
+    
+        return $stmt->execute([
+            ':role_name' => $roleName,
+            ':user_id'   => $userId
+        ]);
+    }
+
     public function deleteUser($id)
     {
         $sql = "

@@ -43,11 +43,20 @@ include ROOT_PATH . 'templates/header.php';
             <td><?= escapeHtml($user['role_name'] ?? 'onbekend') ?></td>
 
             <td style="text-align: center; white-space: nowrap;">
+
                 <?php if ($auth->isAdmin()): ?>
-                    <a href="<?= url('changerole.php?id=' . $user['id']) ?>">Rol wijzigen</a> |
+                    <form action="<?= url('changerole.php') ?>" method="post" style="display:inline;">
+                        <input type="hidden" name="id" value="<?= $user['id'] ?>">
+                        <select name="role" onchange="this.form.submit()">
+                            <option value="user" <?= $user['role_name'] === 'user' ? 'selected' : '' ?>>User</option>
+                            <option value="admin" <?= $user['role_name'] === 'admin' ?  'selected' : '' ?>>Admin</option>
+                        </select>
+                    </form>
                 <?php endif; ?>
+
                 <a href="<?= url('view.php?id=' . $user['id']) ?>">Bekijken</a> |
                 <a href="<?= url('edit.php?id=' . $user['id']) ?>">Bewerken</a> |
+
                 <form action="<?= url('delete.php') ?>" method="post" style="display:inline;" onsubmit="return confirm('Weet je het zeker?');">
                     <input type="hidden" name="id" value="<?= $user['id'] ?>">
                     <button type="submit" style="background:none; border:none; color:blue; cursor:pointer; padding:0; font:inherit;">Verwijderen</button>

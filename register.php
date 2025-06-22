@@ -12,6 +12,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if ($user->emailExists($email)) {
         setFlash("E-mailadres bestaat al.", "error");
         redirect('register.php');
+    } elseif (strlen($password) < 4) {
+        setFlash("Wachtwoord moet minstens 8 tekens lang zijn.", "error");
+        redirect('register.php');
     } else {
         $user->addUser($name, $email, $password);
         setFlash("Registratie succesvol! Je kunt nu inloggen.", "success");

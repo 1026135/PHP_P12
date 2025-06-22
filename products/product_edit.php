@@ -13,15 +13,14 @@ if (!isset($_GET['id']) || !is_numeric($_GET['id'])) {
     redirect('products/products.php');
 }
 
+$currentUser = $auth->getUser();
 $productData = new Product();
-$product = $productData->getProductById((int)$_GET['id']);
+$product = $productData->getProductById($currentUser['id']);
 
 if (!$product) {
     setFlash("Product niet gevonden.", "error");
     redirect('products/products.php');
 }
-
-$currentUser = $auth->getUser();
 
 if ($product['user_id'] !== $currentUser['id'] && !$auth->isAdmin()) {
     setFlash("Je hebt geen rechten om deze actie uit te voeren.", "error");

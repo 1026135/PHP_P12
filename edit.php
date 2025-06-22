@@ -13,15 +13,14 @@ if (!isset($_GET['id']) || !is_numeric($_GET['id'])) {
     redirect('dashboard.php');
 }
 
+$currentUser = $auth->getUser();
 $userData = new User();
-$user = $userData->getUserById((int)$_GET['id']);
+$user = $userData->getUserById($currentUser['id']);
 
 if (!$user) {
     setFlash("Gebruiker niet gevonden.", "error");
     redirect('dashboard.php');
 }
-
-$currentUser = $auth->getUser();
 
 if ($user['id'] !== $currentUser['id'] && !$auth->isAdmin()) {
     setFlash("Je hebt geen rechten om deze actie uit te voeren.", "error");
@@ -29,23 +28,29 @@ if ($user['id'] !== $currentUser['id'] && !$auth->isAdmin()) {
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $id = (int)$_POST['id'];
+    $id = (int)($_POST['id'] ?? 0);
     $name = trim($_POST['name'] ?? '');
     $email = trim($_POST['email'] ?? '');
 
-    if ($name === '') {
+    if (empty($name)) {
         setFlash("Naam is verplicht.", "error");
     } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
         setFlash("Ongeldig e-mailadres.", "error");
     } else {
-        if ($userData->updateUser($id, $name, $email)) {
-            setFlash("Gebruiker succesvol bijgewerkt.", "success");
-            redirect('dashboard.php');
+        $existingUser = $userData->getUserByEmail($email);
+        if ($existingUser && $existingUser['id'] != $id) {
+            setFlash("Dit e-mailadres is al in gebruik.", "error");
         } else {
-            setFlash("Er is een fout opgetreden bij het bijwerken.", "error");
+            if ($userData->updateUser($id, $name, $email)) {
+                setFlash("Gebruiker succesvol bijgewerkt.", "success");
+                redirect('dashboard.php'); // or your preferred redirect
+            } else {
+                setFlash("Er is een fout opgetreden bij het bijwerken.", "error");
+            }
         }
     }
 }
+
 ?>
 
 <?php 

@@ -2,47 +2,53 @@
 require_once __DIR__ . '/init.php';
 
 $auth = new Auth();
+
 if (!$auth->isLoggedIn()) {
     setFlash("Je moet ingelogd zijn om deze pagina te bekijken.", "error");
     redirect('login.php');
 }
 
-$user = new User();
-$currentUser = $auth->getUser();
 
-$userData = $user->getUserById($currentUser['id']);
-if (!$userData) {
+$currentUser = $auth->getUser();
+$userData = new User();
+$user = $userData->getUserById($currentUser['id']);
+
+if (!$user) {
     setFlash("Gebruiker niet gevonden.", "error");
     redirect('login.php');
 }
 
-$passwordHash = $user->getPasswordHashByUserId($currentUser['id']);
+if ($user['id'] !== $currentUser['id'] && !$auth->isAdmin()) {
+    setFlash("Je hebt geen rechten om deze actie uit te voeren.", "error");
+    redirect('dashboard.php');
+}
 
 // Profiel updaten
-if (isset($_POST['update_profile'])) {
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $id = (int)($_POST['id'] ?? 0);
     $name = trim($_POST['name'] ?? '');
     $email = trim($_POST['email'] ?? '');
 
     if (empty($name)) {
         setFlash("Naam is verplicht.", "error");
-    } elseif (empty($email) || !filter_var($email, FILTER_VALIDATE_EMAIL)) {
-        setFlash("Een geldig e-mailadres is verplicht.", "error");
+    } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        setFlash("Ongeldig e-mailadres.", "error");
     } else {
-        $existingUser = $user->getUserByEmail($email);
-        if ($existingUser && $existingUser['id'] != $currentUser['id']) {
+        $existingUser = $userData->getUserByEmail($email);
+        if ($existingUser && $existingUser['id'] != $id) {
             setFlash("Dit e-mailadres is al in gebruik.", "error");
         } else {
-            if ($user->updateUser($currentUser['id'], $name, $email)) {
-                $_SESSION['user']['name'] = $name;
-                $_SESSION['user']['email'] = $email;
-                setFlash("Profiel succesvol bijgewerkt.", "success");
+            if ($userData->updateUser($id, $name, $email)) {
+                setFlash("Gebruiker succesvol bijgewerkt.", "success");
+                redirect('account.php');
             } else {
-                setFlash("Fout bij bijwerken van profiel.", "error");
+                setFlash("Er is een fout opgetreden bij het bijwerken.", "error");
             }
         }
     }
-    redirect('account.php');
 }
+
+$passwordHash = $userData->getPasswordHashByUserId($currentUser['id']);
 
 // Wachtwoord wijzigen
 if (isset($_POST['change_password'])) {
@@ -77,20 +83,24 @@ include ROOT_PATH . 'templates/header.php';
 <h2><?= escapeHtml($pageTitle) ?></h2>
 
 <h3>Profiel bewerken</h3>
-<form method="post">
-    <input type="hidden" name="update_profile" value="1">
+<form action="<?= url('account.php?id=' . $user['id']) ?>" method="post">
+    <input type="hidden" name="id" value="<?= $user['id'] ?>">
+
     <p>
         <label>Naam:<br>
-            <input type="text" name="name" value="<?= escapeHtml($userData['name']) ?>" required>
+            <input type="text" name="name" value="<?= escapeHtml($_POST['name'] ?? $user['name']) ?>" required>
         </label>
     </p>
+
     <p>
         <label>Email:<br>
-            <input type="email" name="email" value="<?= escapeHtml($userData['email']) ?>" required>
+            <input type="email" name="email" value="<?= escapeHtml($_POST['email'] ?? $user['email']) ?>" required>
         </label>
     </p>
+
     <p>
-        <button type="submit">Profiel opslaan</button>
+        <button type="submit">Opslaan</button>
+        <a href="<?= url('dashboard.php') ?>">Annuleren</a>
     </p>
 </form>
 
