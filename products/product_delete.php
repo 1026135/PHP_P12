@@ -36,3 +36,4 @@ if ($productData->deleteProduct($id)) {
 }
 
 redirect('products/products.php');
+?>

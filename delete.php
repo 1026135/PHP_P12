@@ -9,19 +9,30 @@ if (!$auth->isLoggedIn()) {
 
 $currentUser = $auth->getUser();
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['id'])) {
-    $user = new User();
-    $id = (int)$_POST['id'];
-
-    // (optioneel) controleer of gebruiker bestaat
-    if ($user->getUserById($id)) {
-        $user->deleteUser($id);
-        setFlash("Gebruiker succesvol verwijderd.", "success");
-    } else {
-        setFlash("Gebruiker niet gevonden.", "error");
-    }
-} else {
+if ($_SERVER['REQUEST_METHOD'] !== 'POST' || !isset($_POST['id'])) {
     setFlash("Ongeldige aanvraag.", "error");
+    redirect('dashboard.php');
+}
+
+$userData = new User();
+$id = (int)$_POST['id'];
+
+$user = $userDatar->getUserById($id);
+
+if (!$user) {
+    setFlash("Gebruiker niet gevonden.", "error");
+    redirect('dashboard.php');
+}
+
+if ($user['id'] !== $currentUser['id'] && !$auth->isAdmin()) {
+    setFlash("Je hebt geen rechten om deze actie uit te voeren.", "error");
+    redirect('dashboard.php');
+}
+
+if ($productData->deleteProduct($id)) {
+    setFlash("Gebruiker succesvol verwijderd.", "success");
+} else {
+    setFlash("Fout bij verwijderen van Gebruiker.", "error");
 }
 
 redirect('dashboard.php');
