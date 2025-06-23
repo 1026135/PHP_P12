@@ -7,6 +7,4 @@ define("DB_PASS", "" );
 
 define('BASE_URL', '/Github_code/PHP_P12/');  // URL root path [http://http://localhost/Github_code/PHP_P12/]
 // define('BASE_URL', '/'); // URL root path [http://localhost/]
-
-define('BASE_URL', '/Github_code/PHP_P12/'); //URL for my laptop
 ?>
