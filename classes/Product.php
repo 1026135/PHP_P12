@@ -67,7 +67,6 @@ class Product extends Database
         $sql = "
             UPDATE products
             SET name = :name,
-                user_id = :user_id,
                 description = :description,
                 price = :price
             WHERE id = :id
@@ -76,7 +75,6 @@ class Product extends Database
         return $stmt->execute([
             'id'            => $id,
             'name'          => $data['name'],
-            'user_id'       => $data['user_id'],
             'description'   => $data['description'],
             'price'         => $data['price']
         ]);

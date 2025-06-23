@@ -15,7 +15,10 @@ if (!isset($_GET['id']) || !is_numeric($_GET['id'])) {
 
 $currentUser = $auth->getUser();
 $productData = new Product();
-$product = $productData->getProductById($currentUser['id']);
+
+$productId = (int) $_GET['id'];
+$product = $productData->getProductById($productId);
+
 
 if (!$product) {
     setFlash("Product niet gevonden.", "error");
